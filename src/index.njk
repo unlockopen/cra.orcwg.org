@@ -1,0 +1,18 @@
+---
+title: CRA FAQ Index
+---
+
+<h1>{{ title }}</h1>
+
+<ul>
+  {% for category, questions in faq %}
+    <li>
+      <strong>{{ category }}</strong>
+      <ul>
+        {% for question in questions %}
+          <li>{{ question.question | markdown | safe }}</li>
+        {% endfor %}
+      </ul>
+    </li>
+  {% endfor %}
+</ul>
