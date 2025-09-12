@@ -1,0 +1,28 @@
+---
+layout: layout.njk
+pagination:
+  data: faqItems
+  size: 1
+  alias: item
+permalink: "/faq/{{ item.category }}/{{ item.filename | replace('.md', '') }}/"
+eleventyComputed:
+  title: "{{ item.question }}"
+---
+
+<h1>{{ item.question | markdown | safe }}</h1>
+
+<div class="answer">
+  {{ item.answer | markdown | safe }}
+</div>
+
+{% if item.Status %}
+<div class="status">
+  <strong>Status:</strong> {{ item.Status }}
+</div>
+{% endif %}
+
+{% if item["Related issue"] %}
+<div class="related-issue">
+  <strong>Related issue:</strong> <a href="{{ item["Related issue"] }}">{{ item["Related issue"] }}</a>
+</div>
+{% endif %}

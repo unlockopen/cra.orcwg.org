@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% if title %}{{ title | striptags }} - {% endif %}</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            color: #333;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            border-bottom: 3px solid #3498db;
+            padding-bottom: 10px;
+        }
+        
+        .answer {
+            background: #f8f9fa;
+            padding: 20px;
+            border-left: 4px solid #3498db;
+            margin: 20px 0;
+        }
+        
+        .status, .related-issue {
+            margin: 10px 0;
+            padding: 10px;
+            background: #e8f4f8;
+            border-radius: 4px;
+        }
+        
+        .status strong, .related-issue strong {
+            color: #2c3e50;
+        }
+        
+        .navigation {
+            margin: 20px 0;
+            padding: 15px 0;
+            border-top: 1px solid #eee;
+        }
+        
+        .navigation a {
+            color: #3498db;
+            text-decoration: none;
+        }
+        
+        .navigation a:hover {
+            text-decoration: underline;
+        }
+        
+        a {
+            color: #3498db;
+        }
+        
+        code {
+            background: #f1f2f6;
+            padding: 2px 4px;
+            border-radius: 3px;
+            font-size: 0.9em;
+        }
+        
+        pre {
+            background: #f1f2f6;
+            padding: 15px;
+            border-radius: 5px;
+            overflow-x: auto;
+        }
+        
+        blockquote {
+            border-left: 4px solid #ddd;
+            margin: 0;
+            padding-left: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <a href="/">← Back to FAQ Index</a>
+    </div>
+    
+    <main>
+        {{ content | safe }}
+    </main>
+    
+    <div class="navigation">
+        <a href="/">← Back to FAQ Index</a>
+    </div>
+</body>
+</html>

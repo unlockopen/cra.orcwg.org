@@ -1,4 +1,5 @@
 ---
+layout: layout.njk
 title: CRA FAQ Index
 ---
 
@@ -10,9 +11,13 @@ title: CRA FAQ Index
       <strong>{{ category }}</strong>
       <ul>
         {% for question in questions %}
-          <li>{{ question.question | markdown | safe }}</li>
+          <li>
+            <a href="/faq/{{ category }}/{{ question.filename | replace('.md', '') }}/">
+              {{ question.question | markdown | safe }}
+            </a>
+          </li>
         {% endfor %}
       </ul>
     </li>
   {% endfor %}
-</ul>
+</ul>       
