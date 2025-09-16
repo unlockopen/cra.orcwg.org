@@ -5,18 +5,45 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% if title %}{{ title | striptags }} - {% endif %}</title>
     <link rel="stylesheet" href="/css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
 </head>
 <body>
+    {% if title != "CRA FAQ Index" %}
     <div class="navigation">
         <a href="/">Back to FAQ Index</a>
     </div>
+    {% endif %}
 
     <main>
         {{ content | safe }}
     </main>
 
+    {% if title != "CRA FAQ Index" %}
     <div class="navigation">
         <a href="/">Back to FAQ Index</a>
     </div>
+    {% endif %}
+
+    <script>
+        // Convert markdown code blocks with language-mermaid to mermaid divs
+        document.addEventListener('DOMContentLoaded', function() {
+            const mermaidBlocks = document.querySelectorAll('code.language-mermaid');
+            mermaidBlocks.forEach(function(block) {
+                const mermaidDiv = document.createElement('div');
+                mermaidDiv.className = 'mermaid';
+                mermaidDiv.textContent = block.textContent;
+                block.parentNode.parentNode.replaceChild(mermaidDiv, block.parentNode);
+            });
+
+            // Initialize Mermaid after converting blocks
+            mermaid.initialize({
+                startOnLoad: false,
+                theme: 'default'
+            });
+
+            // Manually trigger Mermaid rendering
+            mermaid.run();
+        });
+    </script>
 </body>
 </html>

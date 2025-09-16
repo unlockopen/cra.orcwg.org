@@ -8,7 +8,7 @@ title: CRA FAQ Index
 <div class="faq-index">
   {% for category, questions in faq %}
     <section class="category-section">
-      <h2 class="category-title">{{ category }}</h2>
+      <h2 class="category-title">{{ category | categoryTitle }}</h2>
       <ul class="question-list">
         {% for question in questions %}
           <li class="question-item">
