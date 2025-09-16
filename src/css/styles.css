@@ -1,0 +1,294 @@
+/* ===================================================================
+   CRA FAQ Stylesheet
+   Inspired by orcwg.org design aesthetic
+   =================================================================== */
+
+/* -------------------------------------------------------------------
+   CSS Custom Properties (Variables)
+   ------------------------------------------------------------------- */
+:root {
+    --primary-color: #ff6b35;
+    --secondary-color: #2c3e50;
+    --text-color: #333;
+    --text-light: #666;
+    --background-light: #f8f9fa;
+    --border-color: #e9ecef;
+    --card-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* -------------------------------------------------------------------
+   Base Styles & Reset
+   ------------------------------------------------------------------- */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+    line-height: 1.6;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 20px;
+    color: var(--text-color);
+    background: #fff;
+    font-weight: 400;
+}
+
+/* -------------------------------------------------------------------
+   Typography
+   ------------------------------------------------------------------- */
+h1 {
+    font-size: 2.5em;
+    font-weight: 600;
+    color: var(--secondary-color);
+    margin-bottom: 30px;
+    letter-spacing: -0.025em;
+    border: none;
+    padding: 0;
+}
+
+h2 {
+    font-size: 2em;
+    font-weight: 500;
+    color: var(--secondary-color);
+    margin: 40px 0 20px 0;
+    letter-spacing: -0.02em;
+}
+
+h3 {
+    font-size: 1.5em;
+    font-weight: 500;
+    color: var(--secondary-color);
+    margin: 30px 0 15px 0;
+}
+
+/* -------------------------------------------------------------------
+   FAQ Index Layout
+   ------------------------------------------------------------------- */
+.faq-index {
+    display: grid;
+    gap: 30px;
+}
+
+.category-section {
+    background: white;
+    border-radius: 12px;
+    box-shadow: var(--card-shadow);
+    padding: 30px;
+    border: 1px solid var(--border-color);
+}
+
+.category-title {
+    font-size: 1.8em;
+    font-weight: 600;
+    color: var(--secondary-color);
+    margin: 0 0 25px 0;
+    padding-bottom: 15px;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+/* -------------------------------------------------------------------
+   Question Lists & Links
+   ------------------------------------------------------------------- */
+.question-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.question-item {
+    margin-bottom: 15px;
+    padding: 0;
+}
+
+.question-link {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    background: var(--background-light);
+    border-radius: 8px;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    font-weight: 500;
+}
+
+.question-link:hover {
+    background: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 15px rgba(255, 107, 53, 0.1);
+    transform: translateY(-1px);
+    color: var(--secondary-color);
+}
+
+.question-link::after {
+    content: '→';
+    margin-left: auto;
+    font-weight: bold;
+    color: var(--primary-color);
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.2s ease;
+}
+
+.question-link:hover::after {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* -------------------------------------------------------------------
+   FAQ Answer Content
+   ------------------------------------------------------------------- */
+.answer {
+    background: var(--background-light);
+    padding: 30px;
+    border-radius: 12px;
+    margin: 30px 0;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+}
+
+.answer p:first-child {
+    margin-top: 0;
+}
+
+.answer p:last-child {
+    margin-bottom: 0;
+}
+
+/* -------------------------------------------------------------------
+   Status & Related Issue Cards
+   ------------------------------------------------------------------- */
+.status,
+.related-issue {
+    margin: 20px 0;
+    padding: 20px;
+    background: linear-gradient(135deg, var(--primary-color), #ff8a65);
+    color: white;
+    border-radius: 10px;
+    box-shadow: var(--card-shadow);
+}
+
+.status strong,
+.related-issue strong {
+    color: white;
+    font-weight: 600;
+}
+
+.related-issue a {
+    color: white;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+/* -------------------------------------------------------------------
+   Navigation
+   ------------------------------------------------------------------- */
+.navigation {
+    margin: 40px 0 0 0;
+    padding: 0;
+    border: none;
+}
+
+.navigation a {
+    display: inline-flex;
+    align-items: center;
+    background: var(--secondary-color);
+    color: white;
+    text-decoration: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    box-shadow: var(--card-shadow);
+}
+
+.navigation a::before {
+    content: '←';
+    margin-right: 8px;
+    font-weight: bold;
+}
+
+.navigation a:hover {
+    background: var(--primary-color);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 20px rgba(255, 107, 53, 0.3);
+}
+
+/* -------------------------------------------------------------------
+   General Links
+   ------------------------------------------------------------------- */
+a {
+    color: var(--primary-color);
+    transition: color 0.2s ease;
+}
+
+a:hover {
+    color: var(--secondary-color);
+}
+
+/* -------------------------------------------------------------------
+   Code Styling
+   ------------------------------------------------------------------- */
+code {
+    background: #f1f3f4;
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-family: 'SF Mono', Consolas, 'Liberation Mono', Menlo, monospace;
+    border: 1px solid var(--border-color);
+}
+
+pre {
+    background: #f1f3f4;
+    padding: 20px;
+    border-radius: 10px;
+    overflow-x: auto;
+    border: 1px solid var(--border-color);
+    box-shadow: var(--card-shadow);
+}
+
+pre code {
+    background: none;
+    padding: 0;
+    border: none;
+}
+
+/* -------------------------------------------------------------------
+   Blockquotes
+   ------------------------------------------------------------------- */
+blockquote {
+    border-left: 4px solid var(--primary-color);
+    margin: 20px 0;
+    padding: 20px;
+    background: var(--background-light);
+    border-radius: 0 8px 8px 0;
+    color: var(--text-light);
+    font-style: italic;
+}
+
+/* -------------------------------------------------------------------
+   Responsive Design
+   ------------------------------------------------------------------- */
+@media (max-width: 768px) {
+    body {
+        padding: 20px 15px;
+    }
+
+    .category-section {
+        padding: 20px;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    .question-link {
+        padding: 12px 15px;
+    }
+
+    .answer {
+        padding: 20px;
+    }
+}

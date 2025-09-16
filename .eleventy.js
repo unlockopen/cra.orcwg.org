@@ -1,6 +1,6 @@
 module.exports = function(eleventyConfig) {
-  // example passthrough or plugins
-  eleventyConfig.addPassthroughCopy("styles");
+  // Copy CSS files to output
+  eleventyConfig.addPassthroughCopy("src/css");
 
   // Add markdown filter
   eleventyConfig.addFilter("markdown", function(content) {

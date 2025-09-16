@@ -5,19 +5,19 @@ title: CRA FAQ Index
 
 <h1>{{ title }}</h1>
 
-<ul>
+<div class="faq-index">
   {% for category, questions in faq %}
-    <li>
-      <strong>{{ category }}</strong>
-      <ul>
+    <section class="category-section">
+      <h2 class="category-title">{{ category }}</h2>
+      <ul class="question-list">
         {% for question in questions %}
-          <li>
-            <a href="/faq/{{ category }}/{{ question.filename | replace('.md', '') }}/">
+          <li class="question-item">
+            <a href="/faq/{{ category }}/{{ question.filename | replace('.md', '') }}/" class="question-link">
               {{ question.question | markdown | safe }}
             </a>
           </li>
         {% endfor %}
       </ul>
-    </li>
+    </section>
   {% endfor %}
-</ul>       
+</div>       
