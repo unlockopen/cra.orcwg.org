@@ -7,7 +7,7 @@
    CSS Custom Properties (Variables)
    ------------------------------------------------------------------- */
 :root {
-    --primary-color: #ff6b35;
+    --primary-color: #1cb1d1;
     --secondary-color: #2c3e50;
     --text-color: #333;
     --text-light: #666;
@@ -165,7 +165,7 @@ h3 {
 .related-issue {
     margin: 20px 0;
     padding: 20px;
-    background: linear-gradient(135deg, var(--primary-color), #ff8a65);
+    background: linear-gradient(135deg, var(--primary-color), #2c3e50);
     color: white;
     border-radius: 10px;
     box-shadow: var(--card-shadow);
