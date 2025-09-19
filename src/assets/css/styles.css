@@ -63,6 +63,22 @@ h3 {
 }
 
 /* -------------------------------------------------------------------
+   Header Layout
+   ------------------------------------------------------------------- */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+}
+
+.header-logo {
+    width: 80px;
+    height: auto;
+    margin-left: 20px;
+}
+
+/* -------------------------------------------------------------------
    FAQ Index Layout
    ------------------------------------------------------------------- */
 .faq-index {
@@ -165,7 +181,7 @@ h3 {
 .related-issue {
     margin: 20px 0;
     padding: 20px;
-    background: linear-gradient(135deg, var(--primary-color), #2c3e50);
+    background: linear-gradient(183deg, var(--primary-color), var(--secondary-color));
     color: white;
     border-radius: 10px;
     box-shadow: var(--card-shadow);
@@ -181,6 +197,37 @@ h3 {
     color: white;
     text-decoration: underline;
     font-weight: 500;
+}
+
+/* -------------------------------------------------------------------
+   Edit on GitHub
+   ------------------------------------------------------------------- */
+.edit-on-github {
+    margin: 30px 0;
+    padding: 15px;
+    background: var(--background-light);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.edit-on-github .edit-icon {
+    font-size: 1.1em;
+}
+
+.edit-on-github a {
+    color: var(--text-light);
+    text-decoration: underline;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.edit-on-github a:hover {
+    color: var(--primary-color);
 }
 
 /* -------------------------------------------------------------------
@@ -317,5 +364,17 @@ blockquote {
 
     .answer {
         padding: 20px;
+    }
+
+    .header-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .header-logo {
+        width: 60px;
+        margin-left: 0;
+        align-self: flex-end;
     }
 }

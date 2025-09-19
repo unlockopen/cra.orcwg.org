@@ -1,9 +1,12 @@
 ---
 layout: layout.njk
-title: CRA FAQ Index
+title: CRA FAQ
 ---
 
-<h1>{{ title }}</h1>
+<div class="header-container">
+  <h1>{{ title }}</h1>
+  <img src="/assets/images/orcwg_orc.png" alt="Open Regulatory Compliance Working Group Orc mascott" class="header-logo">
+</div>
 
 <div class="faq-index">
   {% for category, questions in faq %}
@@ -20,4 +23,4 @@ title: CRA FAQ Index
       </ul>
     </section>
   {% endfor %}
-</div>       
+</div>

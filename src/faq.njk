@@ -9,7 +9,10 @@ eleventyComputed:
   title: "{{ item.question }}"
 ---
 
-<h1>{{ item.question | markdown | safe }}</h1>
+<div class="header-container">
+  <h1>{{ item.question | markdown | safe }}</h1>
+  <img src="/assets/images/orcwg_orc.png" alt="Open Regulatory Compliance Working Group Orc mascott" class="header-logo">
+</div>
 
 <div class="answer">
   {{ item.answer | markdown | safe }}
@@ -26,3 +29,8 @@ eleventyComputed:
   <strong>Related issue:</strong> <a href="{{ item["Related issue"] }}">{{ item["Related issue"] }}</a>
 </div>
 {% endif %}
+
+<div class="edit-on-github">
+  <span class="edit-icon">✏️</span>
+  <a href="https://github.com/orcwg/cra-hub/edit/main/faq/{{ item.category }}/{{ item.filename }}" target="_blank" rel="noopener">Edit this FAQ on GitHub</a>
+</div>
