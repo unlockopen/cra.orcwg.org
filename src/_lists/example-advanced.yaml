@@ -1,0 +1,20 @@
+# Example of a more advanced curated list
+title: "Advanced CRA Topics"
+description: "Complex scenarios and edge cases for experienced users"
+order: 99  # This will appear last due to high order number
+
+# List of FAQs to include
+faqs:
+  # You can add comments to explain why specific FAQs are included
+
+  # Core steward responsibilities
+  - category: "stewards"
+    filename: "obligations.md"
+
+  # Complex manufacturer scenarios
+  - category: "manufacturers"
+    filename: "both-manufacturer-and-steward.md"
+
+  # Legal considerations
+  - category: "legislation"
+    filename: "legal-person.md"

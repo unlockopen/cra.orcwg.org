@@ -1,0 +1,14 @@
+title: "Guide for Open Source Maintainers"
+description: "Key information for open source project maintainers"
+order: 2
+faqs:
+  - category: "maintainers"
+    filename: "should-i-worry.md"
+  - category: "stewards"
+    filename: "what-is-a-steward.md"
+  - category: "stewards"
+    filename: "who-can-be-steward.md"
+  - category: "maintainers"
+    filename: "solo-maintainer-steward.md"
+  - category: "maintainers"
+    filename: "contributors.md"

@@ -1,0 +1,33 @@
+---
+layout: layout.njk
+pagination:
+  data: curatedLists
+  size: 1
+  alias: listData
+  addAllPagesToCollections: true
+permalink: "/lists/{{ listData.key }}/"
+eleventyComputed:
+  title: "{{ listData.value.title }}"
+---
+
+<div class="curated-list-description">
+  <p>{{ listData.value.description }}</p>
+</div>
+
+<div class="faq-index">
+  <section class="category-section">
+    <h2 class="category-title">{{ listData.value.title }}</h2>
+    <ul class="question-list">
+      {% for item in listData.value.items %}
+        <li class="question-item">
+          <a href="{{ item.url }}" class="question-link">
+            <span class="question-text">
+              {{ item.question | markdown | safe }}
+            </span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
+</div>
+

@@ -26,6 +26,11 @@ function walk(dir, category = "") {
         continue;
       }
 
+      // Skip pending guidance files
+      if (parsed.data.type === 'guidance-request') {
+        continue;
+      }
+
       if (!result[category]) {
         result[category] = [];
       }
@@ -46,9 +51,27 @@ function walk(dir, category = "") {
         answer = content;
       }
 
+      // Normalize status based on pending guidance
+      let status = parsed.data.Status;
+      if (parsed.data['pending-guidance']) {
+        status = 'pending-guidance';
+      } else if (status) {
+        // Clean up status - remove emoji and normalize
+        status = status.replace(/⚠️\s*/, '').trim();
+        // Only keep draft or approved, default others to approved
+        if (status.toLowerCase().includes('draft')) {
+          status = 'draft';
+        } else {
+          status = 'approved';
+        }
+      } else {
+        status = 'approved';
+      }
+
       result[category].push({
         filename: entry.name,
         ...parsed.data,
+        Status: status,
         question,
         answer
       });

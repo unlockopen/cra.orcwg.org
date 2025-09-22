@@ -1,0 +1,78 @@
+---
+layout: layout.njk
+title: All FAQs
+permalink: "/faq-list/"
+---
+
+<div class="faq-list-intro">
+  <p>Complete collection of all FAQ topics organized by category. This includes questions and answers covering all aspects of the Cyber Resilience Act, from basic concepts to detailed implementation guidance.</p>
+  <p><strong>Note:</strong> This list includes all FAQs regardless of completion status. Some entries may be drafts, have missing content, or require additional guidance. For curated collections of complete FAQs, visit the <a href="/lists/">Curated Lists</a> section.</p>
+</div>
+
+<div class="faq-index">
+  {% for category, questions in faq %}
+    <section class="category-section">
+      <h2 class="category-title">{{ category | categoryTitle }}</h2>
+      <ul class="question-list">
+        {% for question in questions %}
+          <li class="question-item">
+            <a href="/faq/{{ category }}/{{ question.filename | replace('.md', '') }}/" class="question-link">
+              <span class="question-text">
+                {% if question.question %}
+                  {{ question.question | markdown | safe }}
+                {% else %}
+                  <span class="missing-content">{{ question.filename | replace('.md', '') | replace('-', ' ') | title }}</span>
+                  <span class="content-note">⚠️ Missing question</span>
+                {% endif %}
+                <div class="admin-indicators" style="display: none;">
+                  {% if question.Status %}
+                    {% if "Draft" in question.Status %}
+                      <span class="status-indicator status-draft">⚠️ Draft</span>
+                    {% elif "Pending Guidance" in question.Status %}
+                      <span class="status-indicator status-pending-guidance">🛑 Pending Guidance</span>
+                    {% elif "Approved" in question.Status %}
+                      <span class="status-indicator status-approved">✅ Approved</span>
+                    {% else %}
+                      <span class="status-indicator">{{ question.Status }}</span>
+                    {% endif %}
+                  {% endif %}
+                  {% if not question.answer or question.answer | length == 0 %}
+                    <span class="missing-answer-indicator">⚠️ Missing answer</span>
+                  {% endif %}
+                  {% if question["pending-guidance"] %}
+                    <span class="pending-guidance-indicator">🛑 Pending guidance</span>
+                  {% endif %}
+                </div>
+              </span>
+            </a>
+          </li>
+        {% endfor %}
+      </ul>
+    </section>
+  {% endfor %}
+</div>
+
+<button class="admin-toggle" onclick="toggleFaqListAdminMode()" title="Toggle admin information">
+  ✏️
+</button>
+
+<script>
+function toggleFaqListAdminMode() {
+  const adminIndicators = document.querySelectorAll('.admin-indicators');
+  const button = document.querySelector('.admin-toggle');
+
+  const isHidden = adminIndicators[0]?.style.display === 'none' || adminIndicators[0]?.style.display === '';
+
+  adminIndicators.forEach(indicator => {
+    indicator.style.display = isHidden ? 'block' : 'none';
+  });
+
+  if (isHidden) {
+    button.classList.add('active');
+    button.title = 'Hide admin information';
+  } else {
+    button.classList.remove('active');
+    button.title = 'Toggle admin information';
+  }
+}
+</script>

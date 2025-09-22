@@ -15,6 +15,17 @@ module.exports = function (eleventyConfig) {
       .replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase());
   });
 
+  // Add a filter to get object keys
+  eleventyConfig.addFilter("getKeys", function(obj) {
+    return Object.keys(obj);
+  });
+
+  // Add a filter to truncate text
+  eleventyConfig.addFilter("truncate", function(text, length = 150) {
+    if (text.length <= length) return text;
+    return text.substr(0, length) + '...';
+  });
+
   return {
     dir: {
       input: "src",

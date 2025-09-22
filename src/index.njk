@@ -1,26 +1,26 @@
 ---
 layout: layout.njk
-title: CRA FAQ
+title: "CRA FAQ"
+permalink: "/"
 ---
 
-<div class="header-container">
-  <h1>{{ title }}</h1>
-  <img src="/assets/images/orcwg_orc.png" alt="Open Regulatory Compliance Working Group Orc mascott" class="header-logo">
+<div class="home-intro">
+  <p>Welcome to the Cyber Resilience Act FAQ. Find answers to common questions about the CRA and its implications for software developers, maintainers, and businesses.</p>
 </div>
 
-<div class="faq-index">
-  {% for category, questions in faq %}
-    <section class="category-section">
-      <h2 class="category-title">{{ category | categoryTitle }}</h2>
-      <ul class="question-list">
-        {% for question in questions %}
-          <li class="question-item">
-            <a href="/faq/{{ category }}/{{ question.filename | replace('.md', '') }}/" class="question-link">
-              {{ question.question | markdown | safe }}
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
-    </section>
-  {% endfor %}
+<div class="home-navigation">
+  <a href="/faq-list/" class="home-nav-card">
+    <h2>Browse All FAQs</h2>
+    <p>Complete list of all FAQ topics organized by category</p>
+  </a>
+
+  <a href="/lists/" class="home-nav-card">
+    <h2>Curated Lists</h2>
+    <p>Carefully selected FAQ collections for specific audiences and topics</p>
+  </a>
+
+  <a href="/pending-guidance/" class="home-nav-card">
+    <h2>Pending Guidance</h2>
+    <p>Topics requiring additional clarification currently being developed</p>
+  </a>
 </div>

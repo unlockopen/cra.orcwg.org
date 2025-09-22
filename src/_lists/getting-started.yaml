@@ -1,0 +1,10 @@
+title: "Getting Started with CRA"
+description: "Essential FAQs for understanding the basics of the Cyber Resilience Act"
+order: 1
+faqs:
+  - category: "cra-itself"
+    filename: "cra.md"
+  - category: "cra-itself"
+    filename: "scope.md"
+  - category: "cra-itself"
+    filename: "ce-mark.md"

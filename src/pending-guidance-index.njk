@@ -1,0 +1,28 @@
+---
+layout: layout.njk
+title: "Pending Guidance"
+permalink: "/pending-guidance/"
+---
+
+<div class="pending-guidance-intro">
+  <p>These topics require additional guidance that is currently being developed. Each item represents a request for clarification that will be addressed in future updates.</p>
+</div>
+
+<div class="pending-guidance-index">
+  {% for item in pendingGuidance %}
+    <div class="pending-guidance-item">
+      <a href="/pending-guidance/{{ item.filename | replace('.md', '') }}/" class="pending-guidance-link">
+        <div class="pending-guidance-status">
+          <strong>{{ item.status or '🛑 Pending Guidance' }}</strong>
+        </div>
+        <h3 class="pending-guidance-title">{{ item.title }}</h3>
+        {% if item.content or item.answer %}
+          <p class="pending-guidance-preview">{{ (item.content or item.answer) | markdown | striptags | truncate(150) }}</p>
+        {% endif %}
+        {% if item.relatedFaqs and item.relatedFaqs.length > 0 %}
+          <div class="related-count">{{ item.relatedFaqs.length }} related FAQ{{ 's' if item.relatedFaqs.length != 1 }}</div>
+        {% endif %}
+      </a>
+    </div>
+  {% endfor %}
+</div>

@@ -1,0 +1,12 @@
+title: "Commercial Use and Monetization"
+description: "Understanding CRA implications for commercial projects"
+order: 3
+faqs:
+  - category: "maintainers"
+    filename: "monetization.md"
+  - category: "maintainers"
+    filename: "no-monetization.md"
+  - category: "manufacturers"
+    filename: "what-is-a-manufacturer.md"
+  - category: "manufacturers"
+    filename: "both-manufacturer-and-steward.md"
