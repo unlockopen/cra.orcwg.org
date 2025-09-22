@@ -34,7 +34,7 @@ function walk(dir, category = "") {
 
       // Parse question from first # heading
       const titleMatch = content.match(/^#\s+(.+)$/m);
-      const question = titleMatch ? titleMatch[0] : null;
+      const question = titleMatch ? titleMatch[1] : null;
 
       // Everything after the first heading is the answer
       let answer = null;
