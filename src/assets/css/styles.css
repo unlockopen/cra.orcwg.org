@@ -1259,3 +1259,81 @@ blockquote {
     font-weight: 500;
     margin-top: 10px;
 }
+
+/* -------------------------------------------------------------------
+   Site Footer
+   ------------------------------------------------------------------- */
+.site-footer {
+    background: white;
+    color: var(--text-color);
+    margin-top: 60px;
+    padding: 40px 0 30px 0;
+    border-top: 1px solid var(--border-color);
+}
+
+.footer-content {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+.footer-section h4 {
+    color: var(--secondary-color);
+    font-size: 0.8em;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    letter-spacing: -0.01em;
+}
+
+.footer-section p {
+    margin: 0 0 6px 0;
+    line-height: 1.4;
+    color: var(--text-light);
+    font-size: 0.7em;
+}
+
+.footer-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.footer-section li {
+    margin: 4px 0;
+    font-size: 0.7em;
+}
+
+.footer-section a {
+    color: var(--text-light);
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.2s ease;
+}
+
+.footer-section a:hover {
+    color: var(--primary-color);
+    text-decoration: underline;
+}
+
+@media (max-width: 768px) {
+    .footer-content {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+        padding: 0 15px;
+    }
+
+    .site-footer {
+        margin-top: 40px;
+        padding: 30px 0 20px 0;
+    }
+}
+
+@media (max-width: 480px) {
+    .footer-content {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+}
