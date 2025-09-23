@@ -26,11 +26,11 @@ permalink: "/faq-list/"
                 {% endif %}
                 <div class="admin-indicators" style="display: none;">
                   {% if question.Status %}
-                    {% if "Draft" in question.Status %}
+                    {% if "draft" in question.Status %}
                       <span class="status-indicator status-draft">⚠️ Draft</span>
-                    {% elif "Pending Guidance" in question.Status %}
+                    {% elif "pending-guidance" in question.Status %}
                       <span class="status-indicator status-pending-guidance">🛑 Pending Guidance</span>
-                    {% elif "Approved" in question.Status %}
+                    {% elif "approved" in question.Status %}
                       <span class="status-indicator status-approved">✅ Approved</span>
                     {% else %}
                       <span class="status-indicator">{{ question.Status }}</span>
@@ -38,9 +38,6 @@ permalink: "/faq-list/"
                   {% endif %}
                   {% if not question.answer or question.answer | length == 0 %}
                     <span class="missing-answer-indicator">⚠️ Missing answer</span>
-                  {% endif %}
-                  {% if question["pending-guidance"] %}
-                    <span class="pending-guidance-indicator">🛑 Pending guidance</span>
                   {% endif %}
                 </div>
               </span>

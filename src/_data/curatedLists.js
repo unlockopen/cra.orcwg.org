@@ -52,15 +52,34 @@ module.exports = function () {
     const listItems = [];
 
     for (const faqRef of listConfig.faqs) {
+      let category, filename;
+
+      // Support both new simple format (string) and old format (object)
+      if (typeof faqRef === 'string') {
+        // New format: "directory/filename" (without .md)
+        const parts = faqRef.split('/');
+        if (parts.length === 2) {
+          category = parts[0];
+          filename = parts[1] + '.md'; // Add .md extension
+        } else {
+          console.warn(`Invalid FAQ reference format: ${faqRef}. Expected "category/filename"`);
+          continue;
+        }
+      } else {
+        // Old format: { category: "...", filename: "..." }
+        category = faqRef.category;
+        filename = faqRef.filename;
+      }
+
       // Find the FAQ item in the data
-      const categoryItems = faqData[faqRef.category];
+      const categoryItems = faqData[category];
       if (categoryItems) {
-        const faqItem = categoryItems.find(item => item.filename === faqRef.filename);
+        const faqItem = categoryItems.find(item => item.filename === filename);
         if (faqItem && isCompleteItem(faqItem)) {
           listItems.push({
             ...faqItem,
-            category: faqRef.category,
-            url: `/faq/${faqRef.category}/${faqRef.filename.replace('.md', '')}/`
+            category: category,
+            url: `/faq/${category}/${filename.replace('.md', '')}/`
           });
         }
       }

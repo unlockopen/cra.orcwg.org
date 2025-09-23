@@ -204,7 +204,8 @@ h3 {
     transform: translateX(-10px);
     transition: all 0.2s ease;
     position: relative;
-    z-index: 10; /* Well above status watermarks */
+    z-index: 10;
+    /* Well above status watermarks */
 }
 
 .question-link:hover::after {
@@ -300,11 +301,11 @@ h3 {
     border-left: 4px solid #ff9800;
 }
 
-.admin-info > div {
+.admin-info>div {
     margin-bottom: 15px;
 }
 
-.admin-info > div:last-child {
+.admin-info>div:last-child {
     margin-bottom: 0;
 }
 
@@ -331,22 +332,22 @@ h3 {
     border: 1px solid #ddd;
 }
 
-.status-draft {
-    background: #fff3e0;
-    color: #f57c00;
-    border: 1px solid #ffcc02;
+.status-indicator.status-draft {
+    background: #fff3e0 !important;
+    color: #f57c00 !important;
+    border: 1px solid #ffcc02 !important;
 }
 
-.status-pending-guidance {
-    background: #ffebee;
-    color: #c62828;
-    border: 1px solid #ffcdd2;
+.status-indicator.status-pending-guidance {
+    background: #ffebee !important;
+    color: #c62828 !important;
+    border: 1px solid #ffcdd2 !important;
 }
 
-.status-approved {
-    background: #e8f5e8;
-    color: #2e7d32;
-    border: 1px solid #c8e6c9;
+.status-indicator.status-approved {
+    background: #e8f5e8 !important;
+    color: #2e7d32 !important;
+    border: 1px solid #c8e6c9 !important;
 }
 
 .missing-answer-indicator {
@@ -360,6 +361,60 @@ h3 {
     color: #f57c00;
     border: 1px solid #ffcc02;
 }
+
+/* FAQ status display on individual pages */
+.faq-status-display {
+    margin: 20px 0;
+    background: #fff3e0;
+    border: 1px solid #ffcc02;
+    border-left: 4px solid #ff9800;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.faq-status-display p {
+    margin: 0 0 12px 0;
+    color: var(--secondary-color);
+    line-height: 1.5;
+}
+
+.faq-status-display p:last-child {
+    margin-bottom: 0;
+}
+
+.faq-status-display strong {
+    color: #c62828;
+}
+
+.guidance-content {
+    margin-bottom: 15px;
+}
+
+.guidance-phrase {
+    margin: 8px 0 0 20px !important;
+    font-style: italic;
+    color: var(--text-light);
+    font-size: 0.95em;
+    line-height: 1.4;
+}
+
+.guidance-actions {
+    text-align: right;
+    margin-top: 10px;
+}
+
+.guidance-link {
+    color: #f57c00 !important;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9em;
+}
+
+.guidance-link:hover {
+    color: #e65100 !important;
+    text-decoration: underline;
+}
+
 .answer {
     background: var(--background-light);
     padding: 30px;
@@ -375,6 +430,19 @@ h3 {
 
 .answer p:last-child {
     margin-bottom: 0;
+}
+
+.answer h2:first-child,
+.answer h3:first-child {
+    margin-top: 0;
+}
+
+.answer h2 {
+    margin-top: 25px;
+}
+
+.answer h3 {
+    margin-top: 20px;
 }
 
 /* -------------------------------------------------------------------
@@ -403,13 +471,14 @@ h3 {
 }
 
 .status-banner {
-    background: #e17055;
-    color: white;
+    background: var(--background-light);
+    color: var(--text-color);
     padding: 10px 15px;
     border-radius: 6px;
     margin-bottom: 15px;
     text-align: center;
     font-weight: 600;
+    border: 1px solid var(--border-color);
 }
 
 .pending-guidance-link {
@@ -442,38 +511,77 @@ h3 {
    Pending Guidance Page Styling
    ------------------------------------------------------------------- */
 .pending-guidance-page {
-    background: linear-gradient(135deg, #fff8e1 0%, #fff3cd 100%);
-    border: 2px solid #ffeaa7;
-    border-radius: 15px;
-    padding: 30px;
+    background: white;
+    border-radius: 8px;
     margin: 20px 0;
-    box-shadow: 0 8px 25px rgba(225, 112, 85, 0.15);
-}
-
-.pending-guidance-header h1 {
-    color: #d63031;
-    border-bottom: 3px solid #e17055;
-    padding-bottom: 10px;
 }
 
 .pending-guidance-content {
-    background: white;
-    border: 1px solid #ffeaa7;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(225, 112, 85, 0.1);
+    background: var(--background-light);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0;
+}
+
+.pending-guidance-content h2:first-child,
+.pending-guidance-content h3:first-child {
+    margin-top: 0;
+}
+
+.pending-guidance-content h2 {
+    margin-top: 25px;
+}
+
+.pending-guidance-content h3 {
+    margin-top: 20px;
+}
+
+.guidance-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 20px;
+}
+
+.status-display {
+    background: var(--background-light);
+    color: var(--text-light);
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.9em;
+    font-weight: 500;
+    border: 1px solid var(--border-color);
 }
 
 .pending-guidance-page .edit-on-github {
-    background: #fff3cd;
-    border: 1px solid #ffeaa7;
+    background: var(--background-light);
+    border: 1px solid var(--border-color);
 }
 
-.pending-guidance-page .edit-on-github a {
-    color: #856404;
+.related-faqs-inline {
+    margin-top: 20px;
 }
 
-.pending-guidance-page .edit-on-github a:hover {
-    color: #d63031;
+.related-faqs-inline ul {
+    margin: 0;
+    padding-left: 20px;
+    list-style-type: disc;
+}
+
+.related-faqs-inline li {
+    margin-bottom: 8px;
+    line-height: 1.4;
+}
+
+.related-faqs-inline a {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.related-faqs-inline a:hover {
+    color: var(--secondary-color);
+    text-decoration: underline;
 }
 
 .related-faqs {
@@ -1049,8 +1157,8 @@ blockquote {
 }
 
 .pending-guidance-status strong {
-    background: #ffebee;
-    color: #c62828;
+    background: var(--background-light);
+    color: var(--text-light);
     padding: 4px 8px;
     border-radius: 4px;
     font-size: 0.85em;

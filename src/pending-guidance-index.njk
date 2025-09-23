@@ -5,24 +5,22 @@ permalink: "/pending-guidance/"
 ---
 
 <div class="pending-guidance-intro">
-  <p>These topics require additional guidance that is currently being developed. Each item represents a request for clarification that will be addressed in future updates.</p>
+  <p>These topics require additional guidance from the EU Commission. Each item represents a request for clarification that is to be addressed in future updates.</p>
 </div>
 
-<div class="pending-guidance-index">
-  {% for item in pendingGuidance %}
-    <div class="pending-guidance-item">
-      <a href="/pending-guidance/{{ item.filename | replace('.md', '') }}/" class="pending-guidance-link">
-        <div class="pending-guidance-status">
-          <strong>{{ item.status or '🛑 Pending Guidance' }}</strong>
-        </div>
-        <h3 class="pending-guidance-title">{{ item.title }}</h3>
-        {% if item.content or item.answer %}
-          <p class="pending-guidance-preview">{{ (item.content or item.answer) | markdown | striptags | truncate(150) }}</p>
-        {% endif %}
-        {% if item.relatedFaqs and item.relatedFaqs.length > 0 %}
-          <div class="related-count">{{ item.relatedFaqs.length }} related FAQ{{ 's' if item.relatedFaqs.length != 1 }}</div>
-        {% endif %}
-      </a>
-    </div>
-  {% endfor %}
+<div class="faq-index">
+  <section class="category-section">
+    <h2 class="category-title">Pending Guidance</h2>
+    <ul class="question-list">
+      {% for item in pendingGuidance %}
+        <li class="question-item">
+          <a href="/pending-guidance/{{ item.filename | replace('.md', '') }}/" class="question-link">
+            <span class="question-text">
+              {{ item.title }}
+            </span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </section>
 </div>

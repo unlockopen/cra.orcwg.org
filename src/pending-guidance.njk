@@ -10,27 +10,23 @@ eleventyComputed:
 ---
 
 <div class="pending-guidance-page">
-  <div class="pending-guidance-status">
-    <div class="status-banner">
-      <strong>{{ item.status or '🛑 Pending Guidance' }}</strong>
-    </div>
-    <p>This topic requires additional guidance that is currently being developed. The information below represents a request for clarification that will be addressed in future updates.</p>
+  <div class="guidance-header">
+    <div class="status-display">Status: {{ (item.status or 'Pending') | replace('Guidance', '') | replace('guidance', '') | trim }}</div>
   </div>
 
   <div class="answer pending-guidance-content">
     {{ (item.answer or item.content) | markdown | safe }}
-  </div>
 
-  {% if item.relatedFaqs and item.relatedFaqs.length > 0 %}
-  <div class="related-faqs">
-    <strong>Related FAQs affected by this guidance:</strong>
-    <ul>
-      {% for faq in item.relatedFaqs %}
-      <li><a href="/faq/{{ faq.category }}/{{ faq.filename | replace('.md', '') }}/">{{ faq.question | markdown | safe | striptags }}</a></li>
-      {% endfor %}
-    </ul>
+    {% if item.relatedFaqs and item.relatedFaqs.length > 0 %}
+    <div class="related-faqs-inline">
+      <ul>
+        {% for faq in item.relatedFaqs %}
+        <li><a href="/faq/{{ faq.category }}/{{ faq.filename | replace('.md', '') }}/">{{ faq.question | markdown | safe | striptags }}</a></li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
   </div>
-  {% endif %}
 
   {% if item.data["Related issue"] %}
   <div class="related-issue">

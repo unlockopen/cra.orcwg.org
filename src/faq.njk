@@ -17,6 +17,42 @@ eleventyComputed:
   {{ item.answer | markdown | safe }}
 </div>
 
+{% if "draft" in item.Status %}
+<div class="faq-status-display">
+  <p><strong>⚠️ This FAQ is a draft</strong> - it hasn't been reviewed by the FAQ Task Force. The answer may be incomplete or incorrect.</p>
+</div>
+{% endif %}
+
+{% if ("pending-guidance" in item.Status) or item["pending-guidance"] %}
+<div class="faq-status-display">
+  <p><strong>🛑 Pending Guidance</strong></p>
+  {% if item["pending-guidance"] %}
+    {% for guidanceItem in pendingGuidance %}
+      {% if guidanceItem.filename == item["pending-guidance"] + ".md" %}
+        {% if guidanceItem.content or guidanceItem.answer %}
+          {% set guidanceText = (guidanceItem.content or guidanceItem.answer) | extractGuidanceText %}
+          <div class="guidance-content">
+            {% if guidanceText %}
+              <p>This FAQ awaits commission guidance on:</p>
+              <p class="guidance-phrase">{{ guidanceText | truncate(300) }}</p>
+            {% else %}
+              <p>This FAQ awaits commission guidance.</p>
+            {% endif %}
+          </div>
+          <div class="guidance-actions">
+            <a href="/pending-guidance/{{ item["pending-guidance"] }}/" class="guidance-link">View full guidance request →</a>
+          </div>
+        {% else %}
+          <p>This FAQ awaits commission guidance.</p>
+        {% endif %}
+      {% endif %}
+    {% endfor %}
+  {% else %}
+    <p>This FAQ awaits commission guidance.</p>
+  {% endif %}
+</div>
+{% endif %}
+
 <button class="admin-toggle" onclick="toggleAdminMode()" title="Toggle admin information">
   ✏️
 </button>
@@ -26,12 +62,6 @@ eleventyComputed:
   <div class="pending-guidance-link">
     <strong>🛑 Related Pending Guidance:</strong> <a href="/pending-guidance/{{ item["pending-guidance"] }}/">{{ item["pending-guidance"] | replace('-', ' ') | title }}</a>
     <p><em>This FAQ is affected by pending guidance that is currently being developed.</em></p>
-  </div>
-  {% endif %}
-
-  {% if item.Status %}
-  <div class="status">
-    <strong>Status:</strong> {{ item.Status }}
   </div>
   {% endif %}
 
