@@ -10,8 +10,8 @@ eleventyComputed:
 ---
 
 <div class="pending-guidance-page">
-  <div class="guidance-header">
-    <div class="status-display">Status: {{ (item.status or 'Pending') | replace('Guidance', '') | replace('guidance', '') | trim }}</div>
+  <div class="pending-guidance-status-title">
+    <h2>🛑 Pending Guidance</h2>
   </div>
 
   <div class="answer pending-guidance-content">
