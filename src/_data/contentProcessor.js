@@ -195,7 +195,7 @@ function enrichWithGuidance(faqItems, guidanceItems) {
 
       return {
         ...faqItem,
-        relatedGuidance: relatedGuidance || null
+        guidanceItem: relatedGuidance || null
       };
     }
     return faqItem;
