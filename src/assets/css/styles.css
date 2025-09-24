@@ -1037,6 +1037,28 @@ blockquote {
     margin-top: 20px;
 }
 
+.disclaimer {
+    background: #fff3e0;
+    border: 2px solid #ff9800;
+    border-left: 6px solid #ff9800;
+    border-radius: 8px;
+    padding: 20px;
+    margin: 20px 0 30px 0;
+}
+
+.disclaimer h3 {
+    color: #e65100;
+    margin: 0 0 12px 0;
+    font-size: 1.2em;
+    font-weight: 600;
+}
+
+.disclaimer p {
+    margin: 0;
+    color: var(--text-color);
+    line-height: 1.5;
+}
+
 .home-navigation {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
