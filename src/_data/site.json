@@ -1,0 +1,52 @@
+{
+  "title": "CRA FAQ",
+  "description": "Eleventy website for the CRA Hub of the ORC WG located at cra.orcwg.org",
+  "footer": {
+    "sections": [
+      {
+        "title": "About",
+        "content": "The CRA Hub is a community resource of the [Open Regulatory Compliance (ORC) Working Group](https://orcwg.org). It is built by [UnlockOpen](https://unlockopen.com) with direct funding from the [Eclipse Foundation](https://eclipse.org)."
+      },
+      {
+        "title": "Privacy",
+        "content": "This website does not collect any personal information beyond what is [collected by GitHub Pages](https://docs.github.com/en/pages/getting-started-with-github-pages/what-is-github-pages#data-collection) for hosting purposes."
+      },
+      {
+        "title": "Licenses",
+        "content": "Copyright ORC WG Contributors.",
+        "links": [
+          {
+            "text": "Content (CC-By 4.0)",
+            "url": "https://github.com/orcwg/cra-faq/blob/main/LICENSE.md"
+          },
+          {
+            "text": "Source code (Apache License 2.0)",
+            "url": "https://github.com/orcwg/cra.orcwg.org/blob/main/LICENSE"
+          }
+        ]
+        
+      },
+      {
+        "title": "Community Resources",
+        "links": [
+          {
+            "text": "CRA FAQ GitHub Repository",
+            "url": "https://github.com/orcwg/cra-faq/"
+          },
+          {
+            "text": "FAQ Task Force",
+            "url": "https://github.com/orcwg/cyber-resilience-sig/tree/main/task-forces/faq-tf"
+          },
+          {
+            "text": "Source code of this website",
+            "url": "https://github.com/orcwg/cra.orcwg.org/"
+          },
+          {
+            "text": "Open Regulatory Compliance Working Group",
+            "url": "https://orcwg.org"
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CRA HUB - {% if title %}{{ title | striptags }}{% endif %}</title>
+    <title>{% site.title %} - {% if title %}{{ title | striptags }}{% endif %}</title>
     <link rel="stylesheet" href="/assets/css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
 </head>
@@ -11,7 +11,7 @@
     <main>
         <div class="header-container">
             <div class="header-title">
-                <a href="/"><h1>CRA FAQ</h1></a>
+                <a href="/"><h1>{% site.title %}</h1></a>
             </div>
             <nav class="header-navigation">
                 <a href="/faq-list/" class="header-nav-link{% if page.url == '/faq-list/' or page.url.startsWith('/faq/') %} active{% endif %}">All FAQs</a>
@@ -22,33 +22,7 @@
         </div>
         {{ content | safe }}
 
-        <footer class="site-footer">
-            <div class="footer-content">
-                <div class="footer-section">
-                    <h4>Privacy & Data</h4>
-                    <p>This website does not collect any personal data beyond what GitHub Pages may collect for hosting purposes.</p>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Licensing & Terms</h4>
-                    <p><a href="https://github.com/orcwg/cra-hub/blob/main/LICENSE" target="_blank" rel="noopener">FAQ Content License</a></p>
-                </div>
-
-                <div class="footer-section">
-                    <h4>Community Resources</h4>
-                    <ul>
-                        <li><a href="https://github.com/ninnlangel/crafaq" target="_blank" rel="noopener">Website Repository</a></li>
-                        <li><a href="https://orcwg.org" target="_blank" rel="noopener">Open Regulatory Compliance Working Group</a></li>
-                        <li><a href="https://orcwg.org/faq-tf" target="_blank" rel="noopener">FAQ Task Force</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-section">
-                    <h4>About</h4>
-                    <p>This is a community resource built by <a href="https://unlockopen.com" target="_blank" rel="noopener">UnlockOpen, LLC</a> with direct funding from the <a href="https://eclipse.org" target="_blank" rel="noopener">Eclipse Foundation</a>.</p>
-                </div>
-            </div>
-        </footer>
+        {% include "footer.njk" %}
     </main>
 
     <script>
