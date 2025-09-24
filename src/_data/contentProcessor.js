@@ -2,6 +2,7 @@ const fs = require("fs");
 const path = require("path");
 const matter = require("gray-matter");
 
+
 const CACHE_DIR = path.join(__dirname, "..", "..", "_cache", "faq");
 
 // Pure file system operations
@@ -125,24 +126,8 @@ function classifyContent(parsedItem) {
 function processFaqItem(parsedItem) {
   const { frontmatter, filename, category, question, answer } = parsedItem;
 
-  // Status is required for FAQ items
-  if (!frontmatter.Status) {
-    throw new Error(`Missing Status field in ${filename}`);
-  }
-
-  // Normalize status
-  let status = frontmatter.Status.replace(/⚠️\s*/, '').trim();
-  const lowerStatus = status.toLowerCase();
-
-  if (lowerStatus.includes('draft')) {
-    status = 'draft';
-  } else if (lowerStatus.includes('pending')) {
-    status = 'pending guidance';
-  } else if (lowerStatus.includes('approved')) {
-    status = 'approved';
-  } else {
-    throw new Error(`Invalid Status "${frontmatter.Status}" in ${filename}. Must be draft, approved, or pending guidance.`);
-  }
+  // Normalize status by removing emojis
+  const status = frontmatter.Status.replace(/^(⚠️|🛑|✅)\s*/, '').trim();
 
   return {
     filename,
