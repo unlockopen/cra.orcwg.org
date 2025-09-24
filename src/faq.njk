@@ -23,32 +23,28 @@ eleventyComputed:
 </div>
 {% endif %}
 
-{% if ("pending-guidance" in item.Status) or item["pending-guidance"] %}
-<div class="faq-status-display">
+{% if item["guidance-id"] %}
+<div class="pending-guidance-callout">
   <p><strong>🛑 Pending Guidance</strong></p>
-  {% if item["pending-guidance"] %}
-    {% for guidanceItem in pendingGuidance %}
-      {% if guidanceItem.filename == item["pending-guidance"] + ".md" %}
-        {% if guidanceItem.content or guidanceItem.answer %}
-          <div class="guidance-content">
-            {% if guidanceItem.guidanceText %}
-              <p>This FAQ awaits commission guidance on:</p>
-              <p class="guidance-phrase">{{ guidanceItem.guidanceText | truncate(300) }}</p>
-            {% else %}
-              <p>This FAQ awaits commission guidance.</p>
-            {% endif %}
-          </div>
-          <div class="guidance-actions">
-            <a href="/pending-guidance/{{ item["pending-guidance"] }}/" class="guidance-link">View full guidance request →</a>
-          </div>
-        {% else %}
-          <p>This FAQ awaits commission guidance.</p>
-        {% endif %}
+  {% for guidanceItem in pendingGuidance %}
+    {% if guidanceItem.filename == item["guidance-id"] + ".md" %}
+      {% if guidanceItem.content or guidanceItem.answer %}
+        <div class="guidance-content">
+          {% if guidanceItem.guidanceText %}
+            <p>This FAQ awaits commission guidance on:</p>
+            <p class="guidance-phrase">{{ guidanceItem.guidanceText | truncate(300) }}</p>
+          {% else %}
+            <p>This FAQ awaits commission guidance.</p>
+          {% endif %}
+        </div>
+        <div class="guidance-actions">
+          <a href="/pending-guidance/{{ item["guidance-id"] }}/" class="guidance-link">View full guidance request →</a>
+        </div>
+      {% else %}
+        <p>This FAQ awaits commission guidance.</p>
       {% endif %}
-    {% endfor %}
-  {% else %}
-    <p>This FAQ awaits commission guidance.</p>
-  {% endif %}
+    {% endif %}
+  {% endfor %}
 </div>
 {% endif %}
 
@@ -57,9 +53,9 @@ eleventyComputed:
 </button>
 
 <div class="admin-info" style="display: none;">
-  {% if item["pending-guidance"] %}
+  {% if item["guidance-id"] %}
   <div class="pending-guidance-link">
-    <strong>🛑 Related Pending Guidance:</strong> <a href="/pending-guidance/{{ item["pending-guidance"] }}/">{{ item["pending-guidance"] | replace('-', ' ') | title }}</a>
+    <strong>🛑 Related Pending Guidance:</strong> <a href="/pending-guidance/{{ item["guidance-id"] }}/">{{ item["guidance-id"] | replace('-', ' ') | title }}</a>
     <p><em>This FAQ is affected by pending guidance that is currently being developed.</em></p>
   </div>
   {% endif %}

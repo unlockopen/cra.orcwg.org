@@ -150,8 +150,7 @@ function processFaqItem(parsedItem) {
     ...frontmatter,
     status,
     question,
-    answer,
-    hasPendingGuidanceCallout: Boolean(frontmatter['pending-guidance'])
+    answer
   };
 }
 
@@ -189,9 +188,9 @@ function processGuidanceItem(parsedItem) {
 // Cross-reference enrichment
 function enrichWithGuidance(faqItems, guidanceItems) {
   return faqItems.map(faqItem => {
-    if (faqItem['pending-guidance']) {
+    if (faqItem['guidance-id']) {
       const relatedGuidance = guidanceItems.find(guidance =>
-        guidance.filename === faqItem['pending-guidance'] + '.md'
+        guidance.filename === faqItem['guidance-id'] + '.md'
       );
 
       return {
@@ -210,7 +209,7 @@ function enrichWithRelatedFaqs(guidanceItems, faqItems) {
     const guidanceKey = guidance.filename.replace('.md', '');
 
     for (const faqItem of faqItems) {
-      if (faqItem['pending-guidance'] === guidanceKey) {
+      if (faqItem['guidance-id'] === guidanceKey) {
         relatedFaqs.push({
           category: faqItem.category,
           filename: faqItem.filename,
