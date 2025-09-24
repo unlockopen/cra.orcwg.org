@@ -30,11 +30,10 @@ eleventyComputed:
     {% for guidanceItem in pendingGuidance %}
       {% if guidanceItem.filename == item["pending-guidance"] + ".md" %}
         {% if guidanceItem.content or guidanceItem.answer %}
-          {% set guidanceText = (guidanceItem.content or guidanceItem.answer) | extractGuidanceText %}
           <div class="guidance-content">
-            {% if guidanceText %}
+            {% if guidanceItem.guidanceText %}
               <p>This FAQ awaits commission guidance on:</p>
-              <p class="guidance-phrase">{{ guidanceText | truncate(300) }}</p>
+              <p class="guidance-phrase">{{ guidanceItem.guidanceText | truncate(300) }}</p>
             {% else %}
               <p>This FAQ awaits commission guidance.</p>
             {% endif %}

@@ -2,6 +2,53 @@ const fs = require("fs");
 const path = require("path");
 const matter = require("gray-matter");
 
+function extractGuidanceText(content) {
+  if (!content) return "";
+
+  const lines = content.split('\n');
+  let isInGuidanceSection = false;
+  let shouldStop = false;
+  let guidanceLines = [];
+
+  lines.forEach(line => {
+    if (shouldStop) return;
+
+    const trimmedLine = line.trim();
+
+    // Check if we're entering the "Guidance Needed" section
+    if (trimmedLine.match(/^#+\s*Guidance Needed/i)) {
+      isInGuidanceSection = true;
+      return;
+    }
+
+    // Check if we're entering another section (any heading)
+    if (isInGuidanceSection && trimmedLine.match(/^#+\s/)) {
+      shouldStop = true;
+      return;
+    }
+
+    // Collect lines while in the guidance section
+    if (isInGuidanceSection && trimmedLine) {
+      guidanceLines.push(trimmedLine);
+    }
+  });
+
+  // Join the guidance text and process markdown
+  const rawText = guidanceLines
+    .join(' ')
+    .replace(/\s+/g, ' ')
+    .trim();
+
+  // Convert markdown to HTML and then strip HTML tags for clean text
+  if (rawText) {
+    const markdownIt = require("markdown-it")();
+    const htmlContent = markdownIt.render(rawText);
+    return htmlContent.replace(/<[^>]*>/g, "").trim();
+  }
+
+  return "";
+}
+
 const CACHE_DIR = path.join(__dirname, "..", "..", "_cache", "faq");
 
 function walkForPendingGuidance(dir) {
@@ -93,7 +140,8 @@ module.exports = function () {
       ...guidance,
       title,
       relatedFaqs,
-      relatedFaq: relatedFaqs[0] || null // Keep for backward compatibility
+      relatedFaq: relatedFaqs[0] || null, // Keep for backward compatibility
+      guidanceText: extractGuidanceText(guidance.content)
     };
   });
 };
