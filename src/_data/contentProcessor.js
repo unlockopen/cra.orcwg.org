@@ -28,9 +28,6 @@ function walkAllFiles(dir, category = "") {
   return files;
 }
 
-function readFileContent(filePath) {
-  return fs.readFileSync(filePath, "utf-8");
-}
 
 // Pure content parsing functions
 function parseMarkdown(rawContent, filename, category) {
@@ -237,7 +234,7 @@ function processAllContent() {
   const allFiles = walkAllFiles(CACHE_DIR);
   const parsedContent = allFiles
     .map(file => {
-      const rawContent = readFileContent(file.fullPath);
+      const rawContent = fs.readFileSync(file.fullPath, "utf-8");
       const parsed = parseMarkdown(rawContent, file.filename, file.category);
       return parsed ? { ...parsed, fullPath: file.fullPath } : null;
     })
@@ -268,7 +265,6 @@ module.exports = {
   processAllContent,
   // Export individual functions for testing
   walkAllFiles,
-  readFileContent,
   parseMarkdown,
   extractGuidanceText,
   classifyContent,
