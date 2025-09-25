@@ -25,16 +25,12 @@ permalink: "/faq-list/"
                   <span class="content-note">⚠️ Missing question</span>
                 {% endif %}
                 <div class="admin-indicators" style="display: none;">
-                  {% if question.Status %}
-                    {% if "draft" in question.Status %}
-                      <span class="status-indicator status-draft">⚠️ Draft</span>
-                    {% elif "pending-guidance" in question.Status %}
-                      <span class="status-indicator status-pending-guidance">🛑 Pending Guidance</span>
-                    {% elif "approved" in question.Status %}
-                      <span class="status-indicator status-approved">✅ Approved</span>
-                    {% else %}
-                      <span class="status-indicator">{{ question.Status }}</span>
-                    {% endif %}
+                  {% if question.status == "draft" %}
+                    <span class="status-indicator status-draft">⚠️ Draft</span>
+                  {% elif question.status == "pending guidance" %}
+                    <span class="status-indicator status-pending-guidance">🛑 Pending Guidance</span>
+                  {% elif question.status == "approved" %}
+                    <span class="status-indicator status-approved">✅ Approved</span>
                   {% endif %}
                   {% if not question.hasAnswer %}
                     <span class="missing-answer-indicator">⚠️ Missing answer</span>

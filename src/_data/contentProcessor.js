@@ -126,8 +126,8 @@ function classifyContent(parsedItem) {
 function processFaqItem(parsedItem) {
   const { frontmatter, filename, category, question, answer } = parsedItem;
 
-  // Normalize status by removing emojis
-  const status = frontmatter.Status.replace(/^(⚠️|🛑|✅)\s*/, '').trim();
+  // Normalize status by removing emojis and converting to lowercase
+  const status = frontmatter.Status.replace(/^(⚠️|🛑|✅)\s*/, '').trim().toLowerCase();
 
   return {
     filename,

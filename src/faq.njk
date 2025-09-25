@@ -17,7 +17,7 @@ eleventyComputed:
   {{ item.answer | markdown | safe }}
 </div>
 
-{% if "draft" in item.Status %}
+{% if item.status == "draft" %}
 <div class="faq-status-display">
   <p><strong>⚠️ This FAQ is a draft</strong> - it hasn't been reviewed by the FAQ Task Force. The answer may be incomplete or incorrect.</p>
 </div>
