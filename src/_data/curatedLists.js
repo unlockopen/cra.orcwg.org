@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const yaml = require("js-yaml");
-const faq = require('./faq.js');
+const allContent = require('./allContent.js');
 
 const LISTS_DIR = path.join(__dirname, "..", "_lists");
 
@@ -39,7 +39,7 @@ function isCompleteItem(item) {
 }
 
 module.exports = function () {
-  const faqData = faq();
+  const faqData = allContent().faqsByCategory;
   const curatedListsConfig = loadCuratedListsFromYAML();
   const result = [];
 

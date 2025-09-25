@@ -12,7 +12,7 @@ permalink: "/pending-guidance/"
   <section class="category-section">
     <h2 class="category-title">Pending Guidance</h2>
     <ul class="question-list">
-      {% for item in pendingGuidance %}
+      {% for item in allContent.guidance %}
         <li class="question-item">
           <a href="/pending-guidance/{{ item.filename | replace('.md', '') }}/" class="question-link">
             <span class="question-text">

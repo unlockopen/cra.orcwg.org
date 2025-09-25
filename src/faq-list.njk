@@ -10,7 +10,7 @@ permalink: "/faq-list/"
 </div>
 
 <div class="faq-index">
-  {% for category, questions in faq %}
+  {% for category, questions in allContent.faqsByCategory %}
     <section class="category-section">
       <h2 class="category-title">{{ category | categoryTitle }}</h2>
       <ul class="question-list">
