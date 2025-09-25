@@ -135,7 +135,8 @@ function processFaqItem(parsedItem) {
     ...frontmatter,
     status,
     question,
-    answer
+    answer,
+    hasAnswer: Boolean(answer && answer.trim().length > 0)
   };
 }
 

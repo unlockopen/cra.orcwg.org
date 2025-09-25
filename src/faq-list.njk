@@ -36,7 +36,7 @@ permalink: "/faq-list/"
                       <span class="status-indicator">{{ question.Status }}</span>
                     {% endif %}
                   {% endif %}
-                  {% if not question.answer or question.answer | length == 0 %}
+                  {% if not question.hasAnswer %}
                     <span class="missing-answer-indicator">⚠️ Missing answer</span>
                   {% endif %}
                 </div>
