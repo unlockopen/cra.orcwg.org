@@ -22,23 +22,24 @@ npm install
 - **`npm run build`** - Build the production site with cache update
 - **`npm run update-cache`** - Manually update external content cache
 
-## Architecture Overview
+## Architecture
 
 This is an Eleventy site that acts as a content processor and renderer for external FAQ content rather than managing content locally.
 
 ### Content Flow
-1. **External Content** - FAQ content is maintained in the [`orcwg/cra-faq`](https://github.com/orcwg/cra-faq) repository
-2. **Cache Update** - The `update-cache.sh` script clones/updates external content into `_cache/`
-3. **Data Processing** - Eleventy data files (`src/_data/*.js`) parse cached markdown files into structured data
-4. **Template Rendering** - Nunjucks templates render structured data into HTML pages
+1. **External Content** - FAQ content is maintained in the [`orcwg/cra-hub`](https://github.com/orcwg/cra-hub) repository
+2. **Cache Update** - The `update-cache.sh` script clones/updates external content into `_cache/faq/`
+3. **Data Processing** - Unified content processor parses cached markdown files
+   - **Single Source of Truth**: `allContent.js` provides unified data access
+   - **Content Processing**: `contentProcessor.js` handles file parsing and data enrichment
+   - **Cross-referencing**: Automatic linking between FAQs and guidance requests
+   - **Permalink Generation**: URLs computed once in data layer, not reconstructed in templates
+4. **Template Rendering** - Nunjucks templates consume processed data through `allContent`
 5. **Site Generation** - Final site is output to `_site/` for deployment
 
-### FAQ Processing
-- FAQ content comes from markdown files in the external `orcwg/cra-hub` repository
-- Content is organized by directory structure and processed by `src/_data/faq.js`
-- Questions are extracted from markdown `#` headings
-- Answers are content following the first heading
-- Status tracking: `draft`, `approved`, `pending-guidance`
+### Content Types
+- **FAQs**: Questions and answers with status tracking (`draft`, `approved`, `pending guidance`)
+- **Guidance Requests**: Items awaiting EU Commission clarification
 
 ### Curated Lists
 - YAML files in `src/_lists/` define curated FAQ collections
@@ -54,7 +55,7 @@ This is an Eleventy site that acts as a content processor and renderer for exter
 
 ### Primary Content Source
 - **Repository**: [`orcwg/cra-faq`](https://github.com/orcwg/cra-faq)
-- **Purpose**: Contains all FAQ content in markdown format
+- **Purpose**: Contains all FAQ content and guidance requests in markdown format
 - **Update**: Automatically pulled during builds via `update-cache.sh`
 
 ### Technology Stack
