@@ -2,8 +2,8 @@ const fs = require("fs");
 const path = require("path");
 const matter = require("gray-matter");
 
-
 const CACHE_DIR = path.join(__dirname, "..", "..", "_cache", "faq");
+const OUTPUT_DIR = path.join(__dirname, "..", "..", "_tmp");
 
 // Pure file system operations
 function walkAllFiles(dir, category = "") {
@@ -111,13 +111,6 @@ function extractGuidanceText(content) {
   return "";
 }
 
-// Content classification
-function classifyContent(parsedItem) {
-  if (parsedItem.frontmatter.type === 'guidance-request') {
-    return 'guidance';
-  }
-  return 'faq';
-}
 
 // Data enrichment for FAQ items
 function processFaqItem(parsedItem) {
@@ -241,13 +234,16 @@ function processAllContent() {
     .filter(Boolean);
 
   // Step 2: Classify and process content types
-  const faqItems = parsedContent
-    .filter(item => classifyContent(item) === 'faq')
-    .map(processFaqItem);
+  const faqItems = [];
+  const guidanceItems = [];
 
-  const guidanceItems = parsedContent
-    .filter(item => classifyContent(item) === 'guidance')
-    .map(processGuidanceItem);
+  for (const item of parsedContent) {
+    if (item.frontmatter.type === 'guidance-request') {
+      guidanceItems.push(processGuidanceItem(item));
+    } else {
+      faqItems.push(processFaqItem(item));
+    }
+  }
 
   // Step 3: Cross-reference and enrich
   const enrichedFaqs = enrichWithGuidance(faqItems, guidanceItems);
@@ -261,16 +257,24 @@ function processAllContent() {
   };
 }
 
-module.exports = {
-  processAllContent,
-  // Export individual functions for testing
-  walkAllFiles,
-  parseMarkdown,
-  extractGuidanceText,
-  classifyContent,
-  processFaqItem,
-  processGuidanceItem,
-  enrichWithGuidance,
-  enrichWithRelatedFaqs,
-  organizeFaqsByCategory
+// Main export with debug output
+module.exports = function () {
+  const content = processAllContent();
+
+  // Write to _tmp/faq.json for debugging/inspection
+  try {
+    if (!fs.existsSync(OUTPUT_DIR)) {
+      fs.mkdirSync(OUTPUT_DIR, { recursive: true });
+    }
+    fs.writeFileSync(
+      path.join(OUTPUT_DIR, "faq.json"),
+      JSON.stringify(content.faqsByCategory, null, 2),
+      "utf-8"
+    );
+    console.log("✅ Wrote faq.json to _tmp/");
+  } catch (err) {
+    console.error("⚠️ Could not write faq.json:", err);
+  }
+
+  return content;
 };
