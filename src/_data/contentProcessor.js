@@ -136,7 +136,8 @@ function processFaqItem(parsedItem) {
     status,
     question,
     answer,
-    hasAnswer: Boolean(answer && answer.trim().length > 0)
+    hasAnswer: Boolean(answer && answer.trim().length > 0),
+    permalink: `/faq/${category}/${filename.replace('.md', '')}/`
   };
 }
 
@@ -167,7 +168,8 @@ function processGuidanceItem(parsedItem) {
     status: frontmatter.status,
     fullPath: parsedItem.fullPath,
     title,
-    guidanceText: extractGuidanceText(content)
+    guidanceText: extractGuidanceText(content),
+    permalink: `/pending-guidance/${filename.replace('.md', '')}/`
   };
 }
 

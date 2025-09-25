@@ -79,7 +79,7 @@ module.exports = function () {
           listItems.push({
             ...faqItem,
             category: category,
-            url: `/faq/${category}/${filename.replace('.md', '')}/`
+            url: faqItem.permalink
           });
         }
       }

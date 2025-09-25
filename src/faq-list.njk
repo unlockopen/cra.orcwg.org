@@ -16,7 +16,7 @@ permalink: "/faq-list/"
       <ul class="question-list">
         {% for question in questions %}
           <li class="question-item">
-            <a href="/faq/{{ category }}/{{ question.filename | replace('.md', '') }}/" class="question-link">
+            <a href="{{ question.permalink }}" class="question-link">
               <span class="question-text">
                 {% if question.question %}
                   {{ question.question | markdown | safe }}
