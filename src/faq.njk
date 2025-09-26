@@ -29,7 +29,7 @@ eleventyComputed:
   {% if item.guidanceData.hasSpecificGuidance %}
     <div class="guidance-content">
       <p>This FAQ awaits commission guidance on:</p>
-      <p class="guidance-phrase">{{ item.guidanceData.guidanceNeeded }}</p>
+      <p class="guidance-phrase">{{ item.guidanceData.summary }}</p>
     </div>
     <div class="guidance-actions">
       <a href="{{ item.guidanceData.guidanceUrl }}" class="guidance-link">View full guidance request →</a>

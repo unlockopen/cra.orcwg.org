@@ -30,11 +30,11 @@ function extractAnswer(content, titleMatch) {
 }
 
 /**
- * Extract guidance subject from "Guidance needed" section
+ * Extract summary from "Guidance needed" section
  * @param {string} content - Raw markdown content
- * @returns {string} - Extracted guidance subject
+ * @returns {string} - Extracted guidance summary
  */
-function extractGuidanceSubject(content) {
+function extractGuidanceSummary(content) {
     if (!content) return "";
 
     const lines = content.split('\n');
@@ -101,17 +101,14 @@ function parseGuidanceMarkdown(fileContent, filename, category, contentType) {
     const titleMatch = baseItem.rawContent.match(/^#\s+(.+)$/m);
     const title = extractTitle(baseItem.rawContent);
     const answer = extractAnswer(baseItem.rawContent, titleMatch);
-    const guidanceSubject = extractGuidanceSubject(baseItem.rawContent);
+    const summary = extractGuidanceSummary(baseItem.rawContent);
 
     return {
         ...baseItem,
         // Guidance-specific semantic fields
-        title: title || baseItem.data.title || filename.replace('.md', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        title: title || baseItem.title || filename.replace('.md', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
         answer,
-        guidanceSubject,
-        // Legacy fields for backward compatibility
-        guidanceNeeded: guidanceSubject,
-        guidanceText: guidanceSubject,
+        summary,
         // Keep raw content for reference
         content: baseItem.rawContent,
         // Pre-compute template data
@@ -127,8 +124,8 @@ function parseGuidanceMarkdown(fileContent, filename, category, contentType) {
  */
 function computeGuidanceTemplateData(baseItem, filename) {
     return {
-        hasRelatedIssue: !!baseItem.data && !!baseItem.data["Related issue"],
-        relatedIssue: baseItem.data ? baseItem.data["Related issue"] : null,
+        hasRelatedIssue: !!baseItem["Related issue"],
+        relatedIssue: baseItem["Related issue"] || null,
         githubEditUrl: `https://github.com/orcwg/cra-hub/edit/main/faq/pending-guidance/${filename}`
     };
 }

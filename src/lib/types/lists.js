@@ -38,7 +38,7 @@ function extractDescription(content, titleMatch) {
  * @param {string} contentType - Content type for URL generation
  * @returns {Object|null} - Parsed list item or null if invalid
  */
-function parseListMarkdown(fileContent, filename, category, contentType) {
+function parseListsMarkdown(fileContent, filename, category, contentType) {
     const { parseMarkdown } = require("../contentProcessor");
 
     // Start with base parsing
@@ -50,23 +50,23 @@ function parseListMarkdown(fileContent, filename, category, contentType) {
     const title = extractTitle(baseItem.rawContent);
     const description = extractDescription(baseItem.rawContent, titleMatch);
 
-    const computedTitle = title || baseItem.data.title || filename.replace('.md', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    const computedTitle = title || baseItem.title || filename.replace('.md', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     const computedDescription = description || '';
 
     return {
         ...baseItem,
-        // Flatten data properties first
-        ...baseItem.data,
         // Then override with computed semantic fields
         title: computedTitle,
         description: computedDescription,
-        order: baseItem.data.order ? parseInt(baseItem.data.order, 10) : 999,
-        faqs: baseItem.data.faqs || [],
+        order: baseItem.order ? parseInt(baseItem.order, 10) : 999,
+        faqs: baseItem.faqs || [],
         // Keep raw content for reference
         content: baseItem.rawContent,
         // Legacy compatibility - some templates may expect these
         question: title,
-        answer: computedDescription
+        answer: computedDescription,
+        // Initialize empty items array that will be populated in post-processing
+        items: []
     };
 }
 
@@ -95,9 +95,7 @@ function postProcessLists(listItems, allParsedData) {
                 if (faq) {
                     items.push({
                         question: faq.question,
-                        url: faq.url,
-                        category: faq.category,
-                        filename: faq.filename
+                        url: faq.url
                     });
                 }
             }
@@ -125,6 +123,6 @@ function computeListTemplateData(listItem, items) {
 }
 
 module.exports = {
-    parseListMarkdown,
+    parseListsMarkdown,
     postProcessLists
 };

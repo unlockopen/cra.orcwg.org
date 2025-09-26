@@ -6,7 +6,7 @@ pagination:
   alias: item
 permalink: "{{ item.url }}"
 eleventyComputed:
-  title: "{{ item.title or 'Pending Guidance' }}"
+  title: "Guidance request : {{ item.title }}"
 ---
 
 <div class="pending-guidance-page">
@@ -14,8 +14,8 @@ eleventyComputed:
     <h2>🛑 Pending Guidance</h2>
   </div>
 
-  <div class="answer pending-guidance-content">
-    {{ item.answer | markdown | safe }}
+  <div class="pending-guidance-content">
+    {{ item.content | markdown | safe }}
 
     <div class="related-faqs-inline">
       <ul>
@@ -25,12 +25,6 @@ eleventyComputed:
       </ul>
     </div>
   </div>
-
-  {% if item.templateData.hasRelatedIssue %}
-  <div class="related-issue">
-    <strong>Related issue:</strong> <a href="{{ item.templateData.relatedIssue }}">{{ item.templateData.relatedIssue }}</a>
-  </div>
-  {% endif %}
 
   <div class="edit-on-github">
     <span class="edit-icon">✏️</span>

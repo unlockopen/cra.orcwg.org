@@ -17,16 +17,21 @@ function extractQuestion(content) {
  * Extract answer from markdown content
  * @param {string} content - Raw markdown content
  * @param {Object} titleMatch - Title match object
- * @returns {string} - Extracted answer
+ * @returns {string|null} - Extracted answer or null if empty
  */
 function extractAnswer(content, titleMatch) {
+  let answer;
   if (titleMatch) {
     const afterTitle = content.substring(
       content.indexOf(titleMatch[0]) + titleMatch[0].length
     ).trim();
-    return afterTitle;
+    answer = afterTitle;
+  } else {
+    answer = content.trim();
   }
-  return content;
+
+  // Return null for empty answers instead of empty string
+  return answer === '' ? null : answer;
 }
 
 /**
@@ -49,15 +54,15 @@ function parseFaqMarkdown(fileContent, filename, category, contentType) {
     const titleMatch = baseItem.rawContent.match(/^#\s+(.+)$/m);
     const answer = extractAnswer(baseItem.rawContent, titleMatch);
 
+    // Build result immutably - include answer only if it exists
     return {
         ...baseItem,
         // FAQ-specific semantic fields
         question,
-        answer,
         // Keep raw content for reference
         content: baseItem.rawContent,
-        // Flatten frontmatter data to top level for backward compatibility
-        ...baseItem.data
+        // Only add answer field if there's actual content (immutable)
+        ...(answer !== null && { answer })
     };
 }
 
@@ -67,6 +72,9 @@ function parseFaqMarkdown(fileContent, filename, category, contentType) {
  * @param {Array} faqItems - Array of parsed FAQ items
  * @param {Object} allParsedData - All parsed data by type for cross-referencing
  * @returns {Array} - Array of enriched FAQ items
+ *
+ * NOTE: This function intentionally mutates allParsedData.guidance for cross-referencing.
+ * This is a design compromise for bidirectional linking between content types.
  */
 function postProcessFaq(faqItems, allParsedData) {
     const { enrichFaqsWithGuidance, enrichGuidanceWithFaqs } = require("../contentProcessor");
@@ -88,7 +96,7 @@ function postProcessFaq(faqItems, allParsedData) {
     // Step 3: Enrich guidance with related FAQs (bidirectional linking)
     const enrichedGuidance = enrichGuidanceWithFaqs(guidanceItems, faqsWithTemplateData);
 
-    // Update the guidance in the parsed data for other processors to use
+    // MUTATION: Update guidance for cross-referencing (design compromise)
     if (allParsedData.guidance) {
         allParsedData.guidance = enrichedGuidance;
     }
@@ -122,8 +130,8 @@ function computeGuidanceData(faq, guidanceItems) {
     return {
         hasPendingGuidance: true,
         guidanceKey,
-        guidanceNeeded: guidanceItem.guidanceNeeded,
-        hasSpecificGuidance: !!guidanceItem.guidanceNeeded,
+        summary: guidanceItem.summary,
+        hasSpecificGuidance: !!guidanceItem.summary,
         guidanceUrl: `/pending-guidance/${guidanceKey}/`
     };
 }

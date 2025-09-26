@@ -1,5 +1,11 @@
 const path = require("path");
 const { createContentProcessor } = require("../lib/contentProcessor");
+const {
+  getContentTypeNames,
+  getSourceDirectory,
+  createParserRegistry
+} = require("../lib/contentConfig");
+const { clearValidationLog } = require("../lib/validation");
 
 // =============================================================================
 // PURE PIPELINE FUNCTIONS
@@ -275,30 +281,23 @@ const logParsing = (parsedItemsByType, logger) => {
 module.exports = function () {
   const cacheDir = path.join(__dirname, "..", "..", "_cache");
 
-  // Create parser registry with specialized parsers
-  const parserConfigs = [
-    { name: "faq", path: "../lib/types/faq" },
-    { name: "lists", path: "../lib/types/lists" },
-    { name: "guidance", path: "../lib/types/guidance" }
-  ];
+  // Clear validation log at start of build
+  clearValidationLog();
 
-  const parserRegistry = {};
-  parserConfigs.forEach(({ name, path: modulePath }) => {
-    try {
-      const parser = require(modulePath);
-      parserRegistry[name] = parser;
-    } catch (error) {
-      // Parser not available, continue without it
-    }
-  });
+  // Get configured content types
+  const contentTypeNames = getContentTypeNames();
+  console.log(`📋 Processing configured content types: ${contentTypeNames.join(', ')}`);
+
+  // Create parser registry from configuration
+  const parserRegistry = createParserRegistry();
 
   const processor = createContentProcessor({ parserRegistry });
 
   console.log("🚀 Starting unified content processing...");
 
   // Phase 1: Discovery (I/O)
-  console.log("📁 Walking directory structure...");
-  const filesByType = processor.walkAllFiles(cacheDir);
+  console.log("📁 Walking configured content directories...");
+  const filesByType = processor.walkConfiguredDirectories(cacheDir, contentTypeNames, getSourceDirectory);
   logDiscovery(filesByType, console.log);
 
   // Phase 2: Parsing (I/O + Pure)

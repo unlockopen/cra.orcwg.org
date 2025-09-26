@@ -114,6 +114,20 @@ const createUrl = (contentType, category, filename) => {
 };
 
 /**
+ * Pure function to normalize content text
+ * Ensures consistent capitalization of key terms
+ * @param {string} content - Raw markdown content
+ * @returns {string} - Normalized content
+ */
+const normalizeContent = (content) => {
+  if (!content) return content;
+
+  // Replace standalone "cra" (case-insensitive) with "CRA"
+  // Uses word boundaries to avoid replacing parts of other words
+  return content.replace(/\bcra\b/gi, 'CRA');
+};
+
+/**
  * Pure base parser - extracts only frontmatter and raw content
  * @param {Object} fileContent - Parsed file content
  * @param {string} filename - Filename
@@ -131,12 +145,16 @@ const parseMarkdown = (fileContent, filename, category, contentType = 'faq') => 
     return null;
   }
 
+  // Normalize content for consistent terminology
+  const normalizedContent = normalizeContent(content);
+
   return {
     filename,
     category,
-    rawContent: content,
-    data: frontmatter,
-    url: createUrl(contentType, category, filename)
+    rawContent: normalizedContent,
+    url: createUrl(contentType, category, filename),
+    // Flatten frontmatter to root level
+    ...frontmatter
   };
 };
 
@@ -269,21 +287,17 @@ const extractGuidanceTitle = (guidance) => {
  */
 const findRelatedFaqs = (guidance, faqItems) => {
   const guidanceKey = guidance.filename.replace('.md', '');
-  const relatedFaqs = [];
 
-  faqItems.forEach(faq => {
-    const faqGuidanceKey = faq['pending-guidance'] || faq['guidance-id'];
-    if (faqGuidanceKey === guidanceKey) {
-      relatedFaqs.push({
-        category: faq.category,
-        filename: faq.filename,
-        question: faq.question,
-        url: faq.url
-      });
-    }
-  });
-
-  return relatedFaqs;
+  return faqItems
+    .filter(faq => {
+      const faqGuidanceKey = faq['pending-guidance'] || faq['guidance-id'];
+      return faqGuidanceKey === guidanceKey;
+    })
+    .map(faq => ({
+      question: faq.question,
+      url: faq.url
+    }))
+    .sort((a, b) => a.question.localeCompare(b.question));
 };
 
 /**
@@ -312,12 +326,13 @@ const enrichGuidanceWithFaqs = (guidanceItems, faqItems) => {
  * @returns {Object} - Flat store
  */
 const createFlatStore = (items, keyExtractor) => {
-  const flatStore = {};
-  items.forEach(item => {
+  return items.reduce((store, item) => {
     const key = keyExtractor(item);
-    flatStore[key] = item;
-  });
-  return flatStore;
+    return {
+      ...store,
+      [key]: item
+    };
+  }, {});
 };
 
 /**
@@ -334,16 +349,13 @@ const createFaqKey = (faq) =>
  * @returns {Object} - Items grouped by category
  */
 const groupByCategory = (items) => {
-  const grouped = {};
-
-  items.forEach(item => {
-    if (!grouped[item.category]) {
-      grouped[item.category] = [];
-    }
-    grouped[item.category].push(item);
-  });
-
-  return grouped;
+  return items.reduce((grouped, item) => {
+    const category = item.category;
+    return {
+      ...grouped,
+      [category]: [...(grouped[category] || []), item]
+    };
+  }, {});
 };
 
 /**
@@ -444,71 +456,74 @@ const readDirectory = (dirPath) => {
 };
 
 /**
- * Impure function to walk directory structure
+ * Impure function to walk specific directory for a content type
+ * @param {string} typeDir - Directory for specific content type
+ * @param {string} typeName - Content type name
+ * @returns {Array} - Files for this type
+ */
+const walkContentTypeDirectory = (typeDir, typeName) => {
+  const files = [];
+
+  if (!directoryExists(typeDir)) {
+    console.warn(`⚠️ Content type directory does not exist: ${typeDir}`);
+    return files;
+  }
+
+  const walkDirectory = (dir, category = "") => {
+    if (!directoryExists(dir)) return;
+
+    for (const entry of readDirectory(dir)) {
+      const fullPath = path.join(dir, entry.name);
+
+      if (entry.isDirectory()) {
+        walkDirectory(fullPath, entry.name);
+      } else if (entry.isFile() && entry.name.endsWith(".md")) {
+        files.push({
+          filename: entry.name,
+          fullPath,
+          category: category || 'root',
+          relativePath: path.relative(typeDir, fullPath),
+          contentType: typeName
+        });
+      }
+    }
+  };
+
+  walkDirectory(typeDir);
+  return files;
+};
+
+/**
+ * Impure function to walk all configured content type directories
  * @param {string} cacheDir - Cache directory
+ * @param {Array} contentTypeNames - Array of content type names to process
+ * @param {Function} getSourceDirectory - Function to get source directory for type
  * @returns {Object} - Files by type
  */
-const walkAllFilesIO = (cacheDir) => {
+const walkConfiguredDirectories = (cacheDir, contentTypeNames, getSourceDirectory) => {
   const result = {};
 
-  if (!directoryExists(cacheDir)) return result;
-
-  const rootDirs = readDirectory(cacheDir)
-    .filter(entry => entry.isDirectory())
-    .map(entry => entry.name);
-
-  for (const rootDir of rootDirs) {
-    const rootPath = path.join(cacheDir, rootDir);
-    const files = [];
-
-    const walkDirectory = (dir, category = "") => {
-      if (!directoryExists(dir)) return;
-
-      for (const entry of readDirectory(dir)) {
-        const fullPath = path.join(dir, entry.name);
-
-        if (entry.isDirectory()) {
-          walkDirectory(fullPath, entry.name);
-        } else if (entry.isFile() && entry.name.endsWith(".md")) {
-          files.push({
-            filename: entry.name,
-            fullPath,
-            category: category || 'root',
-            relativePath: path.relative(cacheDir, fullPath),
-            url: `/${rootDir}/${category ? category + '/' : ''}${entry.name.replace('.md', '')}/`
-          });
-        }
-      }
-    };
-
-    walkDirectory(rootPath);
-    result[rootDir] = files;
+  for (const typeName of contentTypeNames) {
+    const typeDir = getSourceDirectory(typeName, cacheDir);
+    if (typeDir) {
+      result[typeName] = walkContentTypeDirectory(typeDir, typeName);
+    } else {
+      console.warn(`⚠️ No source directory configured for content type: ${typeName}`);
+      result[typeName] = [];
+    }
   }
 
   return result;
 };
 
 /**
- * Impure function to log validation results
- * @param {Array} invalidItems - Invalid items
+ * Impure function to log validation results (success only)
+ * Error details are handled by validation.js and logged to file
  * @param {Array} validItems - Valid items
  * @param {string} schemaType - Schema type
- * @param {Function} errorLogger - Error logging function
  * @param {Function} infoLogger - Info logging function
  */
-const logValidationResults = (invalidItems, validItems, schemaType, errorLogger = console.error, infoLogger = console.log) => {
-  if (invalidItems.length > 0) {
-    errorLogger(`    ❌ Found ${invalidItems.length} invalid ${schemaType} items`);
-    errorLogger(`    ⚠️ Excluding ${invalidItems.length} invalid ${schemaType} items from output`);
-    invalidItems.forEach(result => {
-      const itemDescription = result.item.filename || result.item.title || `item ${result.index}`;
-      errorLogger(`   • Excluded: ${itemDescription}`);
-      result.errors.forEach(error => {
-        errorLogger(`     - ${error.path}: ${error.message}`);
-      });
-    });
-  }
-
+const logValidationResults = (validItems, schemaType, infoLogger = console.log) => {
   if (validItems.length > 0) {
     infoLogger(`    ✅ ${validItems.length} valid ${schemaType} items included`);
   }
@@ -526,7 +541,7 @@ const logValidationResults = (invalidItems, validItems, schemaType, errorLogger 
  */
 const validateAndFilterWithLogging = (items, validator, schemaType, context, errorLogger, infoLogger) => {
   const { valid, invalid } = partitionByValidation(items, validator, schemaType, context);
-  logValidationResults(invalid, valid, schemaType, errorLogger, infoLogger);
+  logValidationResults(valid, schemaType, infoLogger);
   return valid;
 };
 
@@ -534,26 +549,6 @@ const validateAndFilterWithLogging = (items, validator, schemaType, context, err
 // DEPENDENCY INJECTION HELPERS
 // =============================================================================
 
-/**
- * Create parser registry with safe module loading
- * @param {Array} parserConfigs - Parser configurations
- * @param {Function} moduleLoader - Module loader function (for testing)
- * @returns {Object} - Parser registry
- */
-const createParserRegistry = (parserConfigs, moduleLoader = require) => {
-  const registry = {};
-
-  parserConfigs.forEach(({ name, path: modulePath }) => {
-    try {
-      const parser = moduleLoader(modulePath);
-      registry[name] = parser;
-    } catch (error) {
-      // Silently continue if parser not available - this is expected behavior
-    }
-  });
-
-  return registry;
-};
 
 /**
  * Create a content processor with injected dependencies
@@ -565,7 +560,7 @@ const createContentProcessor = (dependencies = {}) => {
     parserRegistry = {},
     validator = require("./validation").validateData,
     fileReader = readFileContentIO,
-    directoryWalker = walkAllFilesIO,
+    directoryWalker = walkConfiguredDirectories,
     logger = console,
     markdownParser = parseMarkdown
   } = dependencies;
@@ -584,7 +579,8 @@ const createContentProcessor = (dependencies = {}) => {
 
     // I/O functions with dependency injection
     readFileContent: (filePath) => fileReader(filePath, logger.error),
-    walkAllFiles: (cacheDir) => directoryWalker(cacheDir),
+    walkConfiguredDirectories: (cacheDir, contentTypeNames, getSourceDirectory) =>
+      directoryWalker(cacheDir, contentTypeNames, getSourceDirectory),
     validateAndFilterContent: (items, schemaType, context) =>
       validateAndFilterWithLogging(items, validator, schemaType, context, logger.error, logger.log),
 
@@ -605,6 +601,7 @@ module.exports = {
 
   // Pure functions for testing
   parseMarkdown,
+  normalizeContent,
   normalizeStatus,
   enrichFaqsWithGuidance,
   enrichGuidanceWithFaqs,
@@ -617,7 +614,8 @@ module.exports = {
 
   // I/O functions
   readFileContentIO,
-  walkAllFilesIO,
+  walkConfiguredDirectories,
+  walkContentTypeDirectory,
   validateAndFilterWithLogging,
 
 };

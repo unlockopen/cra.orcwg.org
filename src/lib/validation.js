@@ -3,6 +3,39 @@ const addFormats = require("ajv-formats");
 const fs = require("fs");
 const path = require("path");
 
+// Validation error log file
+const VALIDATION_LOG_FILE = path.join(process.cwd(), 'validation-errors.log');
+
+/**
+ * Clear validation log file at start of build
+ */
+function clearValidationLog() {
+    try {
+        if (fs.existsSync(VALIDATION_LOG_FILE)) {
+            fs.unlinkSync(VALIDATION_LOG_FILE);
+        }
+    } catch (error) {
+        console.warn('Failed to clear validation log:', error.message);
+    }
+}
+
+/**
+ * Write validation errors to log file
+ * @param {string} message - Error message to log
+ */
+function logValidationError(message) {
+    const timestamp = new Date().toISOString();
+    const logEntry = `[${timestamp}] ${message}\n`;
+
+    try {
+        fs.appendFileSync(VALIDATION_LOG_FILE, logEntry);
+    } catch (error) {
+        // Fallback to console if file writing fails
+        console.error('Failed to write to validation log:', error.message);
+        console.error(message);
+    }
+}
+
 // Initialize AJV with better error messages
 const ajv = new Ajv({
     allErrors: true,
@@ -41,7 +74,7 @@ try {
 function validateData(data, schemaType, context = '') {
     const validator = validators[schemaType];
     if (!validator) {
-        console.warn(`⚠️ No validator found for schema type: ${schemaType}`);
+        console.warn(`    ⚠️ No validator found for schema type: ${schemaType}`);
         return { valid: true, errors: [] }; // Skip validation if no schema
     }
 
@@ -53,13 +86,22 @@ function validateData(data, schemaType, context = '') {
             data: error.data
         }));
 
-        console.error(`❌ Schema validation failed for ${schemaType}${context ? ` (${context})` : ''}:`);
-        errors.forEach(error => {
-            console.error(`   • ${error.path}: ${error.message}`);
-            if (error.data !== undefined) {
-                console.error(`     Value: ${JSON.stringify(error.data)}`);
-            }
-        });
+        // Log detailed errors to file
+        const errorDetails = [
+            `    ❌ Schema validation failed for ${schemaType}${context ? ` (${context})` : ''}:`,
+            ...errors.map(error => {
+                const lines = [`   • ${error.path}: ${error.message}`];
+                if (error.data !== undefined) {
+                    lines.push(`     Value: ${JSON.stringify(error.data)}`);
+                }
+                return lines.join('\n');
+            })
+        ].join('\n');
+
+        logValidationError(errorDetails);
+
+        // Only show summary in console
+        console.error(`    ❌ Schema validation failed for ${schemaType}${context ? ` (${context})` : ''} (details in validation-errors.log)`);
 
         return { valid: false, errors };
     }
@@ -79,8 +121,21 @@ function validateArray(dataArray, schemaType, context = '') {
     const allErrors = results.flatMap(result => result.errors);
 
     if (invalidItems.length > 0) {
-        console.error(`❌ Found ${allErrors.length} validation errors in ${schemaType} array`);
-        console.error(`⚠️ Excluding ${invalidItems.length} invalid ${schemaType} items from output`);
+        // Log detailed errors to file
+        const errorSummary = [
+            `    ❌ Found ${allErrors.length} validation errors in ${schemaType} array`,
+            `    ⚠️ Excluding ${invalidItems.length} invalid ${schemaType} items from output`,
+            ...invalidItems.map(result => {
+                const itemDescription = result.item.filename || result.item.title || `item ${result.index}`;
+                const itemErrors = result.errors.map(err => `        - ${err.path}: ${err.message}`).join('\n');
+                return `       • Excluded: ${itemDescription}\n${itemErrors}`;
+            })
+        ].join('\n');
+
+        logValidationError(errorSummary);
+
+        // Only show summary in console
+        console.error(`    ❌ Found ${invalidItems.length} invalid ${schemaType} items (details in validation-errors.log)`);
         invalidItems.forEach(result => {
             const itemDescription = result.item.filename || result.item.title || `item ${result.index}`;
             console.error(`   • Excluded: ${itemDescription}`);
@@ -88,7 +143,7 @@ function validateArray(dataArray, schemaType, context = '') {
     }
 
     if (validItems.length > 0) {
-        console.log(`✅ ${validItems.length} valid ${schemaType} items included`);
+        console.log(`    ✅ ${validItems.length} valid ${schemaType} items included`);
     }
 
     return {
@@ -109,5 +164,6 @@ module.exports = {
     validateData,
     validateArray,
     validateAndFilterArray,
-    validators
+    validators,
+    clearValidationLog
 };

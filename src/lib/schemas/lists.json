@@ -5,27 +5,21 @@
   "description": "Schema for processed curated list items in the CRA system",
   "type": "object",
   "properties": {
-    "filename": {
-      "type": "string",
-      "description": "The markdown filename of this list item",
-      "pattern": "^[a-z0-9-]+\\.md$"
+    "answer": {
+      "type": ["string", "null"],
+      "description": "Parsed answer/description from the list file"
     },
     "category": {
       "type": "string",
       "description": "The category/directory this list belongs to (usually 'root' for lists)"
     },
-    "title": {
+    "content": {
       "type": "string",
-      "description": "Display name for the curated list"
+      "description": "Raw markdown content of the list file"
     },
     "description": {
       "type": "string",
       "description": "Brief description of what this list covers"
-    },
-    "order": {
-      "type": "integer",
-      "description": "Display order (lower numbers appear first)",
-      "minimum": 1
     },
     "items": {
       "type": "array",
@@ -42,55 +36,41 @@
             "type": "string",
             "description": "The URL path to the FAQ item",
             "pattern": "^/faq/"
-          },
-          "category": {
-            "type": "string",
-            "description": "The category directory of the FAQ"
-          },
-          "filename": {
-            "type": "string",
-            "description": "The filename of the FAQ",
-            "pattern": "^[a-z0-9-]+\\.md$"
           }
         },
-        "required": ["question", "url", "category", "filename"],
+        "required": ["question", "url"],
         "additionalProperties": false
       }
     },
-    "content": {
-      "type": "string",
-      "description": "Raw markdown content of the list file"
+    "order": {
+      "type": "integer",
+      "description": "Display order (lower numbers appear first)",
+      "minimum": 1
     },
     "question": {
       "type": ["string", "null"],
       "description": "Parsed question/title from the list file"
     },
-    "answer": {
-      "type": ["string", "null"],
-      "description": "Parsed answer/description from the list file"
+    "title": {
+      "type": "string",
+      "description": "Display name for the curated list"
     }
   },
-  "required": ["filename", "category", "title", "items"],
+  "required": ["title", "items"],
   "additionalProperties": true,
   "examples": [
     {
-      "filename": "getting-started.md",
-      "category": "root",
       "title": "Getting Started with CRA",
       "description": "Essential FAQs for understanding the basics of the Cyber Resilience Act",
       "order": 1,
       "items": [
         {
           "question": "What is the Cyber Resilience Act (CRA)?",
-          "url": "/faq/cra-itself/cra/",
-          "category": "cra-itself",
-          "filename": "cra.md"
+          "url": "/faq/cra-itself/cra/"
         },
         {
           "question": "What is the scope of the CRA?",
-          "url": "/faq/cra-itself/scope/",
-          "category": "cra-itself",
-          "filename": "scope.md"
+          "url": "/faq/cra-itself/scope/"
         }
       ],
       "content": "---\ntitle: \"Getting Started with CRA\"\norder: 1\nfaqs:\n\n- cra-itself/cra\n- cra-itself/scope\n\n---\n\nEssential FAQs for understanding the basics of the Cyber Resilience Act",

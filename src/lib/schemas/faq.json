@@ -5,38 +5,33 @@
   "description": "Schema for individual FAQ items in the CRA FAQ system",
   "type": "object",
   "properties": {
-    "filename": {
-      "type": "string",
-      "description": "The markdown filename of this FAQ item",
-      "pattern": "^[a-z0-9-]+\\.md$"
-    },
-    "Status": {
-      "type": "string",
-      "description": "Publication status of the FAQ",
-      "enum": ["approved", "draft", "pending-guidance"]
-    },
     "Related issue": {
       "type": "string",
       "description": "URL to the GitHub issue related to this FAQ",
       "format": "uri",
       "pattern": "^https://github\\.com/"
     },
-    "question": {
+    "Status": {
       "type": "string",
-      "description": "The main question being answered by this FAQ"
+      "description": "Publication status of the FAQ",
+      "enum": ["approved", "draft", "pending-guidance"]
     },
     "answer": {
       "type": "string",
       "description": "The markdown content answering the question",
       "minLength": 1
     },
+    "category": {
+      "type": "string",
+      "description": "The category directory this FAQ belongs to"
+    },
     "guidance-id": {
       "type": "string",
       "description": "Reference to guidance request identifier (alternative field name)"
     },
-    "category": {
+    "question": {
       "type": "string",
-      "description": "The category directory this FAQ belongs to"
+      "description": "The main question being answered by this FAQ"
     },
     "url": {
       "type": "string",
@@ -44,11 +39,10 @@
       "pattern": "^/faq/"
     }
   },
-  "required": ["filename", "Status", "question", "answer", "category", "url"],
+  "required": ["Status", "question", "answer", "category", "url"],
   "additionalProperties": true,
   "examples": [
     {
-      "filename": "cra.md",
       "Status": "approved",
       "Related issue": "https://github.com/orcwg/cra-hub/issues/154",
       "question": "What is the Cyber Resilience Act (CRA)?",
@@ -57,7 +51,6 @@
       "url": "/faq/cra-itself/cra/"
     },
     {
-      "filename": "what-is-a-security-attestation.md",
       "Status": "draft",
       "Related issue": "https://github.com/orcwg/cra-hub/issues/72",
       "question": "What is a _security attestation_ in the CRA?",
