@@ -1,34 +1,15 @@
 const path = require("path");
 const { createContentProcessor } = require("../lib/contentProcessor");
 const {
-  getContentTypeNames,
+  CONTENT_TYPE_NAMES,
   getSourceDirectory,
   createParserRegistry
 } = require("../lib/contentConfig");
 const { clearValidationLog } = require("../lib/validation");
 
 // =============================================================================
-// PURE PIPELINE FUNCTIONS
+// PIPELINE FUNCTIONS
 // =============================================================================
-
-/**
- * Calculate total files across types
- * @param {Object} filesByType - Files organized by type
- * @returns {number} - Total file count
- */
-const calculateTotalFiles = (filesByType) => {
-  return Object.values(filesByType).reduce((total, files) => total + files.length, 0);
-};
-
-/**
- * Get sorted type names
- * @param {Object} filesByType - Files by type
- * @returns {Array} - Sorted type names
- */
-const getSortedTypeNames = (filesByType) => {
-  return Object.keys(filesByType).sort();
-};
-
 /**
  * Parse files for a single content type
  * @param {Array} files - Files to parse
@@ -119,12 +100,12 @@ const validateAllContentTypes = (parsedItemsByType, validator) => {
  */
 const generateStats = (filesByType, parsedItemsByType, validItemsByType, invalidItemsByType) => {
   const stats = {
-    types: getSortedTypeNames(filesByType),
+    types: Object.keys(filesByType),
     processedAt: new Date().toISOString(),
     version: "1.0.0"
   };
 
-  for (const type of getSortedTypeNames(filesByType)) {
+  for (const type of Object.keys(filesByType)) {
     const fileCount = filesByType[type] ? filesByType[type].length : 0;
     const parsedCount = parsedItemsByType[type] ? parsedItemsByType[type].length : 0;
     const validCount = validItemsByType[type] ? validItemsByType[type].length : 0;
@@ -149,7 +130,7 @@ const buildFinalDataStructure = (validItemsByType, stats) => {
   const completeData = { stats };
 
   // Add each content type alphabetically
-  for (const type of getSortedTypeNames(validItemsByType)) {
+  for (const type of Object.keys(validItemsByType)) {
     completeData[type] = validItemsByType[type];
   }
 
@@ -253,8 +234,8 @@ const computeStatusData = (question) => {
  * @param {Function} logger - Logger function
  */
 const logDiscovery = (filesByType, logger) => {
-  const totalFiles = calculateTotalFiles(filesByType);
-  const typeNames = getSortedTypeNames(filesByType);
+  const totalFiles = Object.values(filesByType).reduce((total, files) => total + files.length, 0);
+  const typeNames = Object.keys(filesByType);
 
   logger(`    📄 Found ${totalFiles} markdown files in ${typeNames.length} types: ${typeNames.join(', ')}`);
 };
@@ -265,7 +246,7 @@ const logDiscovery = (filesByType, logger) => {
  * @param {Function} logger - Logger function
  */
 const logParsing = (parsedItemsByType, logger) => {
-  for (const type of getSortedTypeNames(parsedItemsByType)) {
+  for (const type of Object.keys(parsedItemsByType)) {
     logger(`    ✅ Parsed ${parsedItemsByType[type].length} ${type} items`);
   }
 };
@@ -279,14 +260,13 @@ const logParsing = (parsedItemsByType, logger) => {
  * @returns {Object} - Processed content data
  */
 module.exports = function () {
-  const cacheDir = path.join(__dirname, "..", "..", "_cache");
+  const projectRoot = path.join(__dirname, "..", "..");
 
   // Clear validation log at start of build
   clearValidationLog();
 
   // Get configured content types
-  const contentTypeNames = getContentTypeNames();
-  console.log(`📋 Processing configured content types: ${contentTypeNames.join(', ')}`);
+  console.log(`📋 Processing configured content types: ${CONTENT_TYPE_NAMES.join(', ')}`);
 
   // Create parser registry from configuration
   const parserRegistry = createParserRegistry();
@@ -297,7 +277,7 @@ module.exports = function () {
 
   // Phase 1: Discovery (I/O)
   console.log("📁 Walking configured content directories...");
-  const filesByType = processor.walkConfiguredDirectories(cacheDir, contentTypeNames, getSourceDirectory);
+  const filesByType = processor.walkConfiguredDirectories(projectRoot, CONTENT_TYPE_NAMES, getSourceDirectory);
   logDiscovery(filesByType, console.log);
 
   // Phase 2: Parsing

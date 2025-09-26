@@ -31,31 +31,22 @@ function extractDescription(content, titleMatch) {
 }
 
 /**
- * Custom parser for list markdown files
- * @param {Object} fileContent - Raw file content from readFileContent
- * @param {string} filename - The filename
- * @param {string} category - The category/directory
- * @param {string} contentType - Content type for URL generation
- * @returns {Object|null} - Parsed list item or null if invalid
+ * Specialized lists parser - adds lists-specific fields to base item
+ * @param {Object} baseItem - Base parsed item from common parser
+ * @returns {Object} - Enhanced lists item
  */
-function parseListsMarkdown(fileContent, filename, category, contentType) {
-    const { parseMarkdown } = require("../contentProcessor");
-
-    // Start with base parsing
-    const baseItem = parseMarkdown(fileContent, filename, category, contentType);
-    if (!baseItem) return null;
-
-    // Extract list-specific semantic content
+function enhanceListsItem(baseItem) {
+    // Extract lists-specific semantic content
     const titleMatch = baseItem.rawContent.match(/^#\s+(.+)$/m);
     const title = extractTitle(baseItem.rawContent);
     const description = extractDescription(baseItem.rawContent, titleMatch);
 
-    const computedTitle = title || baseItem.title || filename.replace('.md', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    const computedTitle = title || baseItem.title || baseItem.filename.replace('.md', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     const computedDescription = description || '';
 
     return {
         ...baseItem,
-        // Then override with computed semantic fields
+        // Lists-specific semantic fields
         title: computedTitle,
         description: computedDescription,
         order: baseItem.order ? parseInt(baseItem.order, 10) : 999,
@@ -68,6 +59,19 @@ function parseListsMarkdown(fileContent, filename, category, contentType) {
         // Initialize empty items array that will be populated in post-processing
         items: []
     };
+}
+
+/**
+ * Custom parser for list markdown files (main entry point)
+ * @param {Object} fileContent - Raw file content from readFileContent
+ * @param {string} filename - The filename
+ * @param {string} category - The category/directory
+ * @param {string} contentType - Content type for URL generation
+ * @returns {Object|null} - Parsed list item or null if invalid
+ */
+function parseListsMarkdown(fileContent, filename, category, contentType) {
+    const { parseMarkdown } = require("../contentProcessor");
+    return parseMarkdown(fileContent, filename, category, contentType, enhanceListsItem);
 }
 
 /**

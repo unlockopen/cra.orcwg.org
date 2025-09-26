@@ -9,48 +9,47 @@ const path = require('path');
 
 /**
  * Configuration for each content type
+ * - sourceDir: Directory where raw content files are located (relative to project root)
+ * - parserPath: Path to the parser module for this content type if it needs special handling
+ * - schemaPath: Path to the JSON schema file for validation
  */
 const CONTENT_TYPES = {
   // Frequently Asked Questions
   faq: {
-    sourceDir: 'faq',
+    sourceDir: '_cache/faq',
     parserPath: '../lib/types/faq',
     schemaPath: '../lib/schemas/faq.json',
   },
   // Guidance requests
   guidance: {
-    sourceDir: 'guidance',
+    sourceDir: '_cache/faq/pending-guidance',
     parserPath: '../lib/types/guidance',
     schemaPath: '../lib/schemas/guidance.json',
   },
   // Curated lists of related FAQ items
   lists: {
-    sourceDir: 'lists',
+    sourceDir: 'src/_lists',
     parserPath: '../lib/types/lists',
     schemaPath: '../lib/schemas/lists.json',
   }
 };
 
-/**
- * Get all configured content types
- * @returns {Array} Array of content type names
- */
-function getContentTypeNames() {
-  return Object.keys(CONTENT_TYPES);
-}
-
+const CONTENT_TYPE_NAMES = Object.keys(CONTENT_TYPES);
 
 /**
  * Get source directory path for a content type
  * @param {string} typeName - Content type name
- * @param {string} baseDir - Base cache directory
+ * @param {string} projectRoot - Project root directory (used for relative paths)
  * @returns {string|null} Full path to source directory or null if not found
  */
-function getSourceDirectory(typeName, baseDir) {
+function getSourceDirectory(typeName, projectRoot) {
   const config = CONTENT_TYPES[typeName];
   if (!config) return null;
 
-  return path.join(baseDir, config.sourceDir);
+  // If sourceDir is absolute, use it as-is; otherwise resolve relative to project root
+  return path.isAbsolute(config.sourceDir)
+    ? config.sourceDir
+    : path.join(projectRoot, config.sourceDir);
 }
 
 /**
@@ -61,7 +60,7 @@ function getSourceDirectory(typeName, baseDir) {
 function createParserRegistry(moduleLoader = require) {
   const registry = {};
 
-  for (const typeName of getContentTypeNames()) {
+  for (const typeName of CONTENT_TYPE_NAMES) {
     const config = CONTENT_TYPES[typeName];
     if (!config) continue;
 
@@ -80,7 +79,7 @@ function createParserRegistry(moduleLoader = require) {
 
 module.exports = {
   CONTENT_TYPES,
-  getContentTypeNames,
+  CONTENT_TYPE_NAMES,
   getSourceDirectory,
   createParserRegistry
 };

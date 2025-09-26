@@ -35,20 +35,11 @@ function extractAnswer(content, titleMatch) {
 }
 
 /**
- * Custom parser for FAQ markdown files
- * @param {Object} fileContent - Raw file content from readFileContent
- * @param {string} filename - The filename
- * @param {string} category - The category/directory
- * @param {string} contentType - Content type for URL generation
- * @returns {Object|null} - Parsed FAQ item or null if invalid
+ * Specialized FAQ parser - adds FAQ-specific fields to base item
+ * @param {Object} baseItem - Base parsed item from common parser
+ * @returns {Object} - Enhanced FAQ item with question/answer
  */
-function parseFaqMarkdown(fileContent, filename, category, contentType) {
-    const { parseMarkdown } = require("../contentProcessor");
-
-    // Start with base parsing
-    const baseItem = parseMarkdown(fileContent, filename, category, contentType);
-    if (!baseItem) return null;
-
+function enhanceFaqItem(baseItem) {
     // Extract FAQ-specific semantic content
     const question = extractQuestion(baseItem.rawContent);
     const titleMatch = baseItem.rawContent.match(/^#\s+(.+)$/m);
@@ -61,9 +52,22 @@ function parseFaqMarkdown(fileContent, filename, category, contentType) {
         question,
         // Keep raw content for reference
         content: baseItem.rawContent,
-        // Only add answer field if there's actual content (immutable)
+        // Only add answer field if there's actual content
         ...(answer !== null && { answer })
     };
+}
+
+/**
+ * Custom parser for FAQ markdown files (main entry point)
+ * @param {Object} fileContent - Raw file content from readFileContent
+ * @param {string} filename - The filename
+ * @param {string} category - The category/directory
+ * @param {string} contentType - Content type for URL generation
+ * @returns {Object|null} - Parsed FAQ item or null if invalid
+ */
+function parseFaqMarkdown(fileContent, filename, category, contentType) {
+    const { parseMarkdown } = require("../contentProcessor");
+    return parseMarkdown(fileContent, filename, category, contentType, enhanceFaqItem);
 }
 
 /**

@@ -90,13 +90,12 @@ function extractGuidanceSummary(content) {
  * @param {string} contentType - Content type for URL generation
  * @returns {Object|null} - Parsed guidance item or null if invalid
  */
-function parseGuidanceMarkdown(fileContent, filename, category, contentType) {
-    const { parseMarkdown } = require("../contentProcessor");
-
-    // Start with base parsing
-    const baseItem = parseMarkdown(fileContent, filename, category, contentType);
-    if (!baseItem) return null;
-
+/**
+ * Specialized guidance parser - adds guidance-specific fields to base item
+ * @param {Object} baseItem - Base parsed item from common parser
+ * @returns {Object} - Enhanced guidance item
+ */
+function enhanceGuidanceItem(baseItem) {
     // Extract guidance-specific semantic content
     const titleMatch = baseItem.rawContent.match(/^#\s+(.+)$/m);
     const title = extractTitle(baseItem.rawContent);
@@ -106,14 +105,19 @@ function parseGuidanceMarkdown(fileContent, filename, category, contentType) {
     return {
         ...baseItem,
         // Guidance-specific semantic fields
-        title: title || baseItem.title || filename.replace('.md', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        title: title || baseItem.title || baseItem.filename.replace('.md', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
         answer,
         summary,
         // Keep raw content for reference
         content: baseItem.rawContent,
         // Pre-compute template data
-        templateData: computeGuidanceTemplateData(baseItem, filename)
+        templateData: computeGuidanceTemplateData(baseItem, baseItem.filename)
     };
+}
+
+function parseGuidanceMarkdown(fileContent, filename, category, contentType) {
+    const { parseMarkdown } = require("../contentProcessor");
+    return parseMarkdown(fileContent, filename, category, contentType, enhanceGuidanceItem);
 }
 
 /**
