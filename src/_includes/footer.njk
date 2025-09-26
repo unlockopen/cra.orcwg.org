@@ -1,0 +1,19 @@
+<footer class="site-footer">
+    <div class="footer-content">
+        {% for section in site.footer.sections %}
+        <div class="footer-section">
+            <h4>{{ section.title }}</h4>
+            {% if section.content %}
+                <p>{{ section.content | markdown | safe }}</p>
+            {% endif %}
+            {% if section.links %}
+                <ul>
+                {% for link in section.links %}
+                    <li><a href="{{ link.url }}" target="_blank" rel="noopener">{{ link.text }}</a></li>
+                {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+        {% endfor %}
+    </div>
+</footer>
