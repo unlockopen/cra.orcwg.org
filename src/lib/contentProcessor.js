@@ -466,44 +466,6 @@ const readDirectory = (dirPath) => {
 };
 
 /**
- * Extract frontmatter type from markdown file
- * @param {string} filePath - Path to markdown file
- * @returns {string|null} - Type from frontmatter or null
- */
-const extractFrontmatterType = (filePath) => {
-  try {
-    const fileContent = fs.readFileSync(filePath, "utf-8");
-    const parsed = matter(fileContent);
-    return parsed.data.type || null;
-  } catch (error) {
-    return null;
-  }
-};
-
-/**
- * Check if file matches expected content type based on frontmatter
- * @param {string} filePath - Path to markdown file
- * @param {string} expectedType - Expected content type
- * @returns {boolean} - True if file matches expected type
- */
-const fileMatchesContentType = (filePath, expectedType) => {
-  const frontmatterType = extractFrontmatterType(filePath);
-
-  // If no type specified in frontmatter, assume it matches for FAQ (backward compatibility)
-  if (!frontmatterType && expectedType === 'faq') {
-    return true;
-  }
-
-  // For guidance, require explicit type match
-  if (expectedType === 'guidance') {
-    return frontmatterType === 'guidance-request';
-  }
-
-  // For other types, allow if no type specified or exact match
-  return !frontmatterType || frontmatterType === expectedType;
-};
-
-/**
  * Walk specific directory for a content type
  * @param {string} typeDir - Directory for specific content type
  * @param {string} typeName - Content type name
@@ -526,16 +488,13 @@ const walkContentTypeDirectory = (typeDir, typeName) => {
       if (entry.isDirectory()) {
         walkDirectory(fullPath, entry.name);
       } else if (entry.isFile() && entry.name.endsWith(".md")) {
-        // Filter files based on frontmatter type
-        if (fileMatchesContentType(fullPath, typeName)) {
-          files.push({
-            filename: entry.name,
-            fullPath,
-            category: category || 'root',
-            relativePath: path.relative(typeDir, fullPath),
-            contentType: typeName
-          });
-        }
+        files.push({
+          filename: entry.name,
+          fullPath,
+          category: category || 'root',
+          relativePath: path.relative(typeDir, fullPath),
+          contentType: typeName
+        });
       }
     }
   };

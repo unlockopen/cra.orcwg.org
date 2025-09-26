@@ -32,6 +32,13 @@
       "type": "string",
       "description": "The main question being answered by this FAQ"
     },
+    "type": {
+      "type": "string",
+      "description": "Content type - must not be guidance-request for FAQ items",
+      "not": {
+        "const": "guidance-request"
+      }
+    },
     "url": {
       "type": "string",
       "description": "The relative URL path to this FAQ on the website",
