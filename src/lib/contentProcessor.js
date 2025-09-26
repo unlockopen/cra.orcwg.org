@@ -2,7 +2,7 @@
  * FUNCTIONAL CONTENT PROCESSOR
  *
  * Key principles:
- * 1. Pure functions separated from side effects
+ * 1. Functions with clear separation of concerns
  * 2. Dependency injection instead of global state
  * 3. Immutable data structures
  * 4. Explicit error handling
@@ -18,7 +18,7 @@ const matter = require("gray-matter");
 // =============================================================================
 
 /**
- * Pure function to create parser function name from content type
+ * Create parser function name from content type
  * @param {string} contentType - The content type
  * @returns {string} - The parser function name
  */
@@ -26,7 +26,7 @@ const createParserFunctionName = (contentType) =>
   `parse${contentType.charAt(0).toUpperCase() + contentType.slice(1)}Markdown`;
 
 /**
- * Pure function to create post-processor function name from content type
+ * Create post-processor function name from content type
  * @param {string} contentType - The content type
  * @returns {string} - The post-processor function name
  */
@@ -34,7 +34,7 @@ const createPostProcessorFunctionName = (contentType) =>
   `postProcess${contentType.charAt(0).toUpperCase() + contentType.slice(1)}`;
 
 /**
- * Pure function to get parser from registry
+ * Get parser from registry
  * @param {Object} registry - Parser registry
  * @param {string} contentType - Content type
  * @param {Function} defaultParser - Fallback parser
@@ -57,7 +57,7 @@ const getParserFromRegistry = (registry, contentType, defaultParser) => {
 };
 
 /**
- * Pure function to get post-processor from registry
+ * Get post-processor from registry
  * @param {Object} registry - Parser registry
  * @param {string} contentType - Content type
  * @returns {Function|null} - Post-processor function or null
@@ -79,7 +79,7 @@ const getPostProcessorFromRegistry = (registry, contentType) => {
 };
 
 /**
- * Pure function to parse frontmatter and content
+ * Parse frontmatter and content
  * @param {string} rawContent - Raw file content
  * @returns {Object} - Parsed content object
  */
@@ -95,7 +95,7 @@ const parseFrontmatter = (rawContent) => {
 // Semantic extraction functions have been moved to specialized parsers
 
 /**
- * Pure function to create base URL
+ * Create base URL
  * @param {string} contentType - Content type
  * @param {string} category - Category
  * @param {string} filename - Filename
@@ -114,7 +114,7 @@ const createUrl = (contentType, category, filename) => {
 };
 
 /**
- * Pure function to normalize content text
+ * Normalize content text
  * Ensures consistent capitalization of key terms
  * @param {string} content - Raw markdown content
  * @returns {string} - Normalized content
@@ -128,7 +128,7 @@ const normalizeContent = (content) => {
 };
 
 /**
- * Pure base parser - extracts only frontmatter and raw content
+ * Base parser - extracts frontmatter and raw content
  * @param {Object} fileContent - Parsed file content
  * @param {string} filename - Filename
  * @param {string} category - Category
@@ -159,7 +159,7 @@ const parseMarkdown = (fileContent, filename, category, contentType = 'faq') => 
 };
 
 /**
- * Pure function to normalize status
+ * Normalize status
  * @param {Object} item - Item to normalize
  * @returns {Object} - Normalized item
  */
@@ -179,7 +179,7 @@ const normalizeStatus = (item) => {
 };
 
 /**
- * Pure function to validate single item
+ * Validate single item
  * @param {Object} item - Item to validate
  * @param {Function} validator - Validation function
  * @param {string} schemaType - Schema type
@@ -198,7 +198,7 @@ const validateItem = (item, validator, schemaType, context) => {
 };
 
 /**
- * Pure function to partition items by validation result
+ * Partition items by validation result
  * @param {Array} items - Items to validate
  * @param {Function} validator - Validation function
  * @param {string} schemaType - Schema type
@@ -226,7 +226,7 @@ const partitionByValidation = (items, validator, schemaType, context) => {
 };
 
 /**
- * Pure function to enrich FAQ items with guidance
+ * Enrich FAQ items with guidance
  * @param {Array} faqItems - FAQ items
  * @param {Array} guidanceItems - Guidance items
  * @returns {Array} - Enriched FAQ items
@@ -255,7 +255,7 @@ const enrichFaqsWithGuidance = (faqItems, guidanceItems) => {
 };
 
 /**
- * Pure function to extract title from guidance content
+ * Extract title from guidance content
  * @param {Object} guidance - Guidance item
  * @returns {string} - Extracted title
  */
@@ -280,7 +280,7 @@ const extractGuidanceTitle = (guidance) => {
 };
 
 /**
- * Pure function to find related FAQs for guidance
+ * Find related FAQs for guidance
  * @param {Object} guidance - Guidance item
  * @param {Array} faqItems - FAQ items to search
  * @returns {Array} - Related FAQ references
@@ -301,7 +301,7 @@ const findRelatedFaqs = (guidance, faqItems) => {
 };
 
 /**
- * Pure function to enrich guidance items with related FAQs
+ * Enrich guidance items with related FAQs
  * @param {Array} guidanceItems - Guidance items
  * @param {Array} faqItems - FAQ items
  * @returns {Array} - Enriched guidance items
@@ -320,7 +320,7 @@ const enrichGuidanceWithFaqs = (guidanceItems, faqItems) => {
 };
 
 /**
- * Pure function to create flat store from items
+ * Create flat store from items
  * @param {Array} items - Items to store
  * @param {Function} keyExtractor - Function to extract key from item
  * @returns {Object} - Flat store
@@ -336,7 +336,7 @@ const createFlatStore = (items, keyExtractor) => {
 };
 
 /**
- * Pure function to create FAQ key
+ * Create FAQ key
  * @param {Object} faq - FAQ item
  * @returns {string} - FAQ key
  */
@@ -344,7 +344,7 @@ const createFaqKey = (faq) =>
   `${faq.category}/${faq.filename.replace('.md', '')}`;
 
 /**
- * Pure function to group items by category
+ * Group items by category
  * @param {Array} items - Items to group
  * @returns {Object} - Items grouped by category
  */
@@ -359,7 +359,7 @@ const groupByCategory = (items) => {
 };
 
 /**
- * Pure function to sort object keys and rebuild
+ * Sort object keys and rebuild
  * @param {Object} obj - Object to sort
  * @returns {Object} - Object with sorted keys
  */
@@ -374,7 +374,7 @@ const sortObjectKeys = (obj) => {
 };
 
 /**
- * Pure function to extract guidance text from content
+ * Extract guidance text from content
  * @param {string} content - Markdown content
  * @returns {string} - Extracted guidance text
  */
@@ -422,7 +422,7 @@ const extractGuidanceText = (content) => {
 // =============================================================================
 
 /**
- * Impure function to read file content
+ * Read file content
  * @param {string} filePath - Path to file
  * @param {Function} logger - Logging function
  * @returns {Object|null} - File content or null on error
@@ -438,7 +438,7 @@ const readFileContentIO = (filePath, logger = console.error) => {
 };
 
 /**
- * Impure function to check if directory exists
+ * Check if directory exists
  * @param {string} dirPath - Directory path
  * @returns {boolean} - Whether directory exists
  */
@@ -447,7 +447,7 @@ const directoryExists = (dirPath) => {
 };
 
 /**
- * Impure function to read directory contents
+ * Read directory contents
  * @param {string} dirPath - Directory path
  * @returns {Array} - Directory entries
  */
@@ -456,7 +456,7 @@ const readDirectory = (dirPath) => {
 };
 
 /**
- * Impure function to walk specific directory for a content type
+ * Walk specific directory for a content type
  * @param {string} typeDir - Directory for specific content type
  * @param {string} typeName - Content type name
  * @returns {Array} - Files for this type
@@ -494,7 +494,7 @@ const walkContentTypeDirectory = (typeDir, typeName) => {
 };
 
 /**
- * Impure function to walk all configured content type directories
+ * Walk all configured content type directories
  * @param {string} cacheDir - Cache directory
  * @param {Array} contentTypeNames - Array of content type names to process
  * @param {Function} getSourceDirectory - Function to get source directory for type
@@ -517,7 +517,7 @@ const walkConfiguredDirectories = (cacheDir, contentTypeNames, getSourceDirector
 };
 
 /**
- * Impure function to log validation results (success only)
+ * Log validation results (success only)
  * Error details are handled by validation.js and logged to file
  * @param {Array} validItems - Valid items
  * @param {string} schemaType - Schema type
@@ -530,7 +530,7 @@ const logValidationResults = (validItems, schemaType, infoLogger = console.log) 
 };
 
 /**
- * Impure function to validate and filter with logging
+ * Validate and filter with logging
  * @param {Array} items - Items to validate
  * @param {Function} validator - Validation function
  * @param {string} schemaType - Schema type
@@ -566,7 +566,7 @@ const createContentProcessor = (dependencies = {}) => {
   } = dependencies;
 
   return {
-    // Pure functions (no dependencies needed)
+    // Core business logic functions
     parseMarkdown: markdownParser,
     normalizeStatus: normalizeStatus,
     enrichFaqsWithGuidance: enrichFaqsWithGuidance,
@@ -599,7 +599,7 @@ module.exports = {
   // Factory function
   createContentProcessor,
 
-  // Pure functions for testing
+  // Testable functions
   parseMarkdown,
   normalizeContent,
   normalizeStatus,

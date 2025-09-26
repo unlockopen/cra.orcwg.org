@@ -12,7 +12,7 @@ const { clearValidationLog } = require("../lib/validation");
 // =============================================================================
 
 /**
- * Pure function to calculate total files across types
+ * Calculate total files across types
  * @param {Object} filesByType - Files organized by type
  * @returns {number} - Total file count
  */
@@ -21,7 +21,7 @@ const calculateTotalFiles = (filesByType) => {
 };
 
 /**
- * Pure function to get sorted type names
+ * Get sorted type names
  * @param {Object} filesByType - Files by type
  * @returns {Array} - Sorted type names
  */
@@ -30,7 +30,7 @@ const getSortedTypeNames = (filesByType) => {
 };
 
 /**
- * Pure function to parse files for a single content type
+ * Parse files for a single content type
  * @param {Array} files - Files to parse
  * @param {Function} parser - Parser function
  * @param {Function} fileReader - File reading function
@@ -47,7 +47,7 @@ const parseFilesForType = (files, parser, fileReader, contentType) => {
 };
 
 /**
- * Pure function to parse all content types
+ * Parse all content types
  * @param {Object} filesByType - Files by type
  * @param {Function} getParser - Parser getter function
  * @param {Function} fileReader - File reader function
@@ -65,7 +65,7 @@ const parseAllContentTypes = (filesByType, getParser, fileReader) => {
 };
 
 /**
- * Pure function to apply post-processing to all types
+ * Apply post-processing to all types
  * @param {Object} parsedItemsByType - Parsed items by type
  * @param {Function} getPostProcessor - Post-processor getter function
  * @returns {Object} - Post-processed items by type
@@ -84,7 +84,7 @@ const applyPostProcessing = (parsedItemsByType, getPostProcessor) => {
 };
 
 /**
- * Pure function to validate all content types
+ * Validate all content types
  * @param {Object} parsedItemsByType - Parsed items by type
  * @param {Function} validator - Validation function
  * @returns {Object} - {valid: Object, invalid: Object}
@@ -110,7 +110,7 @@ const validateAllContentTypes = (parsedItemsByType, validator) => {
 };
 
 /**
- * Pure function to generate processing statistics
+ * Generate processing statistics
  * @param {Object} filesByType - Files by type
  * @param {Object} parsedItemsByType - Parsed items by type
  * @param {Object} validItemsByType - Valid items by type
@@ -140,7 +140,7 @@ const generateStats = (filesByType, parsedItemsByType, validItemsByType, invalid
 };
 
 /**
- * Pure function to build final data structure
+ * Build final data structure
  * @param {Object} validItemsByType - Valid items by type
  * @param {Object} stats - Processing statistics
  * @returns {Object} - Final data structure
@@ -157,7 +157,7 @@ const buildFinalDataStructure = (validItemsByType, stats) => {
 };
 
 /**
- * Pure function to add backward compatibility data
+ * Add backward compatibility data
  * @param {Object} completeData - Complete data structure
  * @returns {Object} - Data with backward compatibility additions
  */
@@ -178,7 +178,7 @@ const addBackwardCompatibility = (completeData) => {
 };
 
 /**
- * Pure function to generate FAQ list template data
+ * Generate FAQ list template data
  * @param {Array} faqs - FAQ items
  * @param {Array} categories - Category list
  * @returns {Array} - FAQ list data organized by category
@@ -300,7 +300,7 @@ module.exports = function () {
   const filesByType = processor.walkConfiguredDirectories(cacheDir, contentTypeNames, getSourceDirectory);
   logDiscovery(filesByType, console.log);
 
-  // Phase 2: Parsing (I/O + Pure)
+  // Phase 2: Parsing
   console.log("📝 Parsing markdown files...");
   const parsedItemsByType = parseAllContentTypes(
     filesByType,
@@ -309,14 +309,14 @@ module.exports = function () {
   );
   logParsing(parsedItemsByType, console.log);
 
-  // Phase 3: Post-processing (Pure)
+  // Phase 3: Post-processing
   console.log("🔧 Post-processing specialized content types...");
   const postProcessedItems = applyPostProcessing(
     parsedItemsByType,
     processor.getPostProcessor
   );
 
-  // Phase 4: Validation (Pure + I/O for logging)
+  // Phase 4: Validation
   console.log("🔍 Validating content against schemas...");
   console.log("    📄 Validation errors logged in ./validation-errors.log");
   const { valid: validItemsByType, invalid: invalidItemsByType } = validateAllContentTypes(
@@ -324,11 +324,11 @@ module.exports = function () {
     processor.validateAndFilterContent
   );
 
-  // Phase 5: Statistics generation (Pure)
+  // Phase 5: Statistics generation
   console.log("📊 Generating metadata...");
   const stats = generateStats(filesByType, parsedItemsByType, validItemsByType, invalidItemsByType);
 
-  // Phase 6: Final data structure assembly (Pure)
+  // Phase 6: Final data structure assembly
   const completeData = buildFinalDataStructure(validItemsByType, stats);
   const finalData = addBackwardCompatibility(completeData);
 
