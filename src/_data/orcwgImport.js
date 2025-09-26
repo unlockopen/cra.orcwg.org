@@ -267,20 +267,6 @@ module.exports = function () {
   // Phase 6: Final data structure assembly
   const finalData = buildFinalDataStructure(validItemsByType, stats, parserRegistry);
 
-  // Write debug data file
-  try {
-    const fs = require('fs');
-    const debugDir = '/tmp/claude';
-    if (!fs.existsSync(debugDir)) {
-      fs.mkdirSync(debugDir, { recursive: true });
-    }
-    const debugPath = path.join(debugDir, 'orcwg-debug-data.json');
-    fs.writeFileSync(debugPath, JSON.stringify(finalData, null, 2));
-    console.log("📄 Debug data written to:", debugPath);
-  } catch (error) {
-    console.warn("⚠️ Failed to write debug data:", error.message);
-  }
-
   console.log("🎉 Unified content processing complete!");
 
   return finalData;

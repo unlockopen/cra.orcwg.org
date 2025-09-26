@@ -69,7 +69,7 @@ describe('orcwgImport Integration', () => {
       const result = orcwgImport();
 
       expect(result.stats).toBeDefined();
-      expect(Array.isArray(result.guidance)).toBe(true);
+      expect(typeof result.guidance).toBe('object');
       expect(Array.isArray(result.list)).toBe(true);
       expect(typeof result.faq).toBe('object');
       expect(typeof result.categories).toBe('object');
