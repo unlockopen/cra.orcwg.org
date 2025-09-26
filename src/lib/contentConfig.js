@@ -27,10 +27,10 @@ const CONTENT_TYPES = {
     schemaPath: '../lib/schemas/guidance.json',
   },
   // Curated lists of related FAQ items
-  lists: {
+  list: {
     sourceDir: 'src/_lists',
-    parserPath: '../lib/parsers/lists',
-    schemaPath: '../lib/schemas/lists.json',
+    parserPath: '../lib/parsers/list',
+    schemaPath: '../lib/schemas/list.json',
   }
 };
 
