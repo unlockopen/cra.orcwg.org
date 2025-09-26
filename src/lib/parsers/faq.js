@@ -35,8 +35,8 @@ function extractAnswer(content, titleMatch) {
 }
 
 /**
- * Specialized FAQ parser - adds FAQ-specific fields to base item
- * @param {Object} baseItem - Base parsed item from common parser
+ * Pure FAQ enhancer - adds FAQ-specific fields to base item
+ * @param {Object} baseItem - Base item from parseBaseMarkdown
  * @returns {Object} - Enhanced FAQ item with question/answer
  */
 function enhanceFaqItem(baseItem) {
@@ -58,12 +58,9 @@ function enhanceFaqItem(baseItem) {
 }
 
 /**
- * Custom parser for FAQ markdown files (main entry point)
- * @param {Object} fileContent - Raw file content from readFileContent
- * @param {string} filename - The filename
- * @param {string} category - The category/directory
- * @param {string} contentType - Content type for URL generation
- * @returns {Object|null} - Parsed FAQ item or null if invalid
+ * DEPRECATED: Custom parser for FAQ markdown files (main entry point)
+ * Use parseBaseMarkdown + enhanceFaqItem instead
+ * @deprecated
  */
 function parseFaqMarkdown(fileContent, filename, category, contentType) {
     const { parseMarkdown } = require("../contentProcessor");
@@ -210,6 +207,7 @@ function computeStatusData(question) {
 
 
 module.exports = {
+    enhanceFaqItem,
     parseFaqMarkdown,
     postProcessFaq
 };

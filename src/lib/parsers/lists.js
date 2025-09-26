@@ -31,8 +31,8 @@ function extractDescription(content, titleMatch) {
 }
 
 /**
- * Specialized lists parser - adds lists-specific fields to base item
- * @param {Object} baseItem - Base parsed item from common parser
+ * Pure lists enhancer - adds lists-specific fields to base item
+ * @param {Object} baseItem - Base item from parseBaseMarkdown
  * @returns {Object} - Enhanced lists item
  */
 function enhanceListsItem(baseItem) {
@@ -62,12 +62,9 @@ function enhanceListsItem(baseItem) {
 }
 
 /**
- * Custom parser for list markdown files (main entry point)
- * @param {Object} fileContent - Raw file content from readFileContent
- * @param {string} filename - The filename
- * @param {string} category - The category/directory
- * @param {string} contentType - Content type for URL generation
- * @returns {Object|null} - Parsed list item or null if invalid
+ * DEPRECATED: Custom parser for list markdown files (main entry point)
+ * Use parseBaseMarkdown + enhanceListsItem instead
+ * @deprecated
  */
 function parseListsMarkdown(fileContent, filename, category, contentType) {
     const { parseMarkdown } = require("../contentProcessor");
@@ -127,6 +124,7 @@ function computeListTemplateData(listItem, items) {
 }
 
 module.exports = {
+    enhanceListsItem,
     parseListsMarkdown,
     postProcessLists
 };

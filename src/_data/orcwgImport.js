@@ -11,12 +11,37 @@ const { clearValidationLog } = require("../lib/validation");
 // PIPELINE FUNCTIONS
 // =============================================================================
 /**
- * Parse files for a single content type
+ * Phase 1: Parse files to base items using pure base parser
  * @param {Array} files - Files to parse
- * @param {Function} parser - Parser function
+ * @param {Function} baseParser - Base parser function
  * @param {Function} fileReader - File reading function
  * @param {string} contentType - Content type for URL generation
- * @returns {Array} - Parsed items
+ * @returns {Array} - Base parsed items
+ */
+const parseFilesToBaseItems = (files, baseParser, fileReader, contentType) => {
+  return files
+    .map(file => {
+      const content = fileReader(file.fullPath);
+      return baseParser(content, file.filename, file.category, contentType);
+    })
+    .filter(Boolean);
+};
+
+/**
+ * Phase 2: Apply content-specific enhancement to base items
+ * @param {Array} baseItems - Base parsed items
+ * @param {Function} enhancer - Content-specific enhancer function
+ * @returns {Array} - Enhanced items
+ */
+const enhanceBaseItems = (baseItems, enhancer) => {
+  if (!enhancer) return baseItems;
+  return baseItems.map(enhancer);
+};
+
+/**
+ * DEPRECATED: Parse files for a single content type
+ * Use parseFilesToBaseItems + enhanceBaseItems instead
+ * @deprecated
  */
 const parseFilesForType = (files, parser, fileReader, contentType) => {
   return files
@@ -28,18 +53,23 @@ const parseFilesForType = (files, parser, fileReader, contentType) => {
 };
 
 /**
- * Parse all content types
+ * Parse all content types using pure two-phase approach
  * @param {Object} filesByType - Files by type
- * @param {Function} getParser - Parser getter function
+ * @param {Function} baseParser - Pure base parser function
+ * @param {Function} getEnhancer - Enhancer getter function
  * @param {Function} fileReader - File reader function
  * @returns {Object} - Parsed items by type
  */
-const parseAllContentTypes = (filesByType, getParser, fileReader) => {
+const parseAllContentTypes = (filesByType, baseParser, getEnhancer, fileReader) => {
   const parsedItemsByType = {};
 
   for (const type in filesByType) {
-    const parser = getParser(type);
-    parsedItemsByType[type] = parseFilesForType(filesByType[type], parser, fileReader, type);
+    // Phase 1: Parse to base items
+    const baseItems = parseFilesToBaseItems(filesByType[type], baseParser, fileReader, type);
+
+    // Phase 2: Apply content-specific enhancement
+    const enhancer = getEnhancer(type);
+    parsedItemsByType[type] = enhanceBaseItems(baseItems, enhancer);
   }
 
   return parsedItemsByType;
@@ -220,11 +250,12 @@ module.exports = function () {
   const filesByType = processor.walkConfiguredDirectories(projectRoot, CONTENT_TYPE_NAMES, getSourceDirectory);
   logDiscovery(filesByType, console.log);
 
-  // Phase 2: Parsing
+  // Phase 2: Parsing (Two-phase approach)
   console.log("📝 Parsing markdown files...");
   const parsedItemsByType = parseAllContentTypes(
     filesByType,
-    processor.getParser,
+    processor.parseBaseMarkdown,
+    processor.getEnhancer,
     processor.readFileContent
   );
   logParsing(parsedItemsByType, console.log);

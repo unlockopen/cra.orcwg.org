@@ -83,16 +83,8 @@ function extractGuidanceSummary(content) {
 }
 
 /**
- * Custom parser for guidance markdown files
- * @param {Object} fileContent - Raw file content from readFileContent
- * @param {string} filename - The filename
- * @param {string} category - The category/directory
- * @param {string} contentType - Content type for URL generation
- * @returns {Object|null} - Parsed guidance item or null if invalid
- */
-/**
- * Specialized guidance parser - adds guidance-specific fields to base item
- * @param {Object} baseItem - Base parsed item from common parser
+ * Pure guidance enhancer - adds guidance-specific fields to base item
+ * @param {Object} baseItem - Base item from parseBaseMarkdown
  * @returns {Object} - Enhanced guidance item
  */
 function enhanceGuidanceItem(baseItem) {
@@ -115,6 +107,11 @@ function enhanceGuidanceItem(baseItem) {
     };
 }
 
+/**
+ * DEPRECATED: Custom parser for guidance markdown files
+ * Use parseBaseMarkdown + enhanceGuidanceItem instead
+ * @deprecated
+ */
 function parseGuidanceMarkdown(fileContent, filename, category, contentType) {
     const { parseMarkdown } = require("../contentProcessor");
     return parseMarkdown(fileContent, filename, category, contentType, enhanceGuidanceItem);
@@ -135,5 +132,6 @@ function computeGuidanceTemplateData(baseItem, filename) {
 }
 
 module.exports = {
+    enhanceGuidanceItem,
     parseGuidanceMarkdown
 };

@@ -34,11 +34,33 @@ const createPostProcessorFunctionName = (contentType) =>
   `postProcess${contentType.charAt(0).toUpperCase() + contentType.slice(1)}`;
 
 /**
- * Get parser from registry
+ * Get enhancer function from registry for pure functional pipeline
  * @param {Object} registry - Parser registry
  * @param {string} contentType - Content type
- * @param {Function} defaultParser - Fallback parser
- * @returns {Function} - Parser function
+ * @returns {Function|null} - Enhancer function or null
+ */
+const getEnhancerFromRegistry = (registry, contentType) => {
+  const specializedParser = registry[contentType];
+  if (!specializedParser) return null;
+
+  // Look for enhance function first (new pattern)
+  const enhancerFunctionName = `enhance${contentType.charAt(0).toUpperCase() + contentType.slice(1)}Item`;
+  if (specializedParser[enhancerFunctionName]) {
+    return specializedParser[enhancerFunctionName];
+  }
+
+  // Fallback to enhance function
+  if (specializedParser.enhance) {
+    return specializedParser.enhance;
+  }
+
+  return null;
+};
+
+/**
+ * DEPRECATED: Get parser from registry
+ * Use getEnhancerFromRegistry + parseBaseMarkdown instead
+ * @deprecated
  */
 const getParserFromRegistry = (registry, contentType, defaultParser) => {
   const specializedParser = registry[contentType];
@@ -128,13 +150,42 @@ const normalizeContent = (content) => {
 };
 
 /**
- * Base parser - extracts frontmatter, applies specialized parsing
+ * Pure base parser - only handles frontmatter extraction and common fields
  * @param {Object} fileContent - Parsed file content
  * @param {string} filename - Filename
  * @param {string} category - Category
  * @param {string} contentType - Content type for URL generation
- * @param {Function} specializedParser - Type-specific parser function
- * @returns {Object|null} - Fully parsed item or null
+ * @returns {Object|null} - Base item with common fields or null
+ */
+const parseBaseMarkdown = (fileContent, filename, category, contentType = 'faq') => {
+  if (!fileContent) return null;
+
+  const { frontmatter, content } = fileContent;
+
+  // Skip files with no frontmatter
+  if (!frontmatter || Object.keys(frontmatter).length === 0) {
+    return null;
+  }
+
+  // Normalize content for consistent terminology
+  const normalizedContent = normalizeContent(content);
+
+  // Create base item with common fields only
+  return {
+    filename,
+    category,
+    contentType,
+    rawContent: normalizedContent,
+    url: createUrl(contentType, category, filename),
+    // Flatten frontmatter to root level
+    ...frontmatter
+  };
+};
+
+/**
+ * DEPRECATED: Base parser with specialized parsing callback
+ * Use parseBaseMarkdown + specialized enhancer functions instead
+ * @deprecated
  */
 const parseMarkdown = (fileContent, filename, category, contentType = 'faq', specializedParser = null) => {
   if (!fileContent) return null;
@@ -577,6 +628,7 @@ const createContentProcessor = (dependencies = {}) => {
 
   return {
     // Core business logic functions
+    parseBaseMarkdown: parseBaseMarkdown,
     parseMarkdown: markdownParser,
     normalizeStatus: normalizeStatus,
     enrichFaqsWithGuidance: enrichFaqsWithGuidance,
@@ -584,6 +636,7 @@ const createContentProcessor = (dependencies = {}) => {
     extractGuidanceText: extractGuidanceText,
 
     // Registry functions
+    getEnhancer: (contentType) => getEnhancerFromRegistry(parserRegistry, contentType),
     getParser: (contentType) => getParserFromRegistry(parserRegistry, contentType, markdownParser),
     getPostProcessor: (contentType) => getPostProcessorFromRegistry(parserRegistry, contentType),
 
@@ -610,6 +663,7 @@ module.exports = {
   createContentProcessor,
 
   // Testable functions
+  parseBaseMarkdown,
   parseMarkdown,
   normalizeContent,
   normalizeStatus,
