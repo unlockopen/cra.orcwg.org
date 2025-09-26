@@ -134,95 +134,35 @@ const buildFinalDataStructure = (validItemsByType, stats) => {
     completeData[type] = validItemsByType[type];
   }
 
+  // Generate FAQ list data from VALID FAQs only
+  if (completeData.faq && completeData.faq.length > 0) {
+    completeData.faqListData = generateFaqListData(completeData.faq);
+  }
+
   return completeData;
 };
 
 /**
- * Add backward compatibility data
- * @param {Object} completeData - Complete data structure
- * @returns {Object} - Data with backward compatibility additions
- */
-const addBackwardCompatibility = (completeData) => {
-  const result = { ...completeData };
-
-  // Extract categories from FAQ data for backward compatibility
-  if (result.faq) {
-    const categoriesWithFaqs = new Set();
-    result.faq.forEach(faq => categoriesWithFaqs.add(faq.category));
-    result.categoryList = Array.from(categoriesWithFaqs).sort();
-
-    // Pre-compute FAQ list template data
-    result.faqListData = generateFaqListData(result.faq, result.categoryList);
-  }
-
-  return result;
-};
-
-/**
- * Generate FAQ list template data
- * @param {Array} faqs - FAQ items
- * @param {Array} categories - Category list
+ * Generate FAQ list template data from valid FAQ items
+ * @param {Array} faqItems - Valid FAQ items only
  * @returns {Array} - FAQ list data organized by category
  */
-const generateFaqListData = (faqs, categories) => {
+const generateFaqListData = (faqItems) => {
+  // Extract categories from valid FAQs only
+  const categories = [...new Set(faqItems.map(faq => faq.category))].sort();
+
   return categories.map(category => {
-    const questionsInCategory = faqs.filter(faq => faq.category === category);
+    const questionsInCategory = faqItems.filter(faq => faq.category === category);
 
     return {
       category,
       categoryTitle: category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-      questions: questionsInCategory.map(question => ({
-        ...question,
-        templateData: computeFaqListItemData(question)
-      })),
+      questions: questionsInCategory,
       hasQuestions: questionsInCategory.length > 0
     };
   }).filter(categoryData => categoryData.hasQuestions);
 };
 
-/**
- * Pre-compute template data for individual FAQ list items
- * @param {Object} question - FAQ item
- * @returns {Object} - Template data
- */
-const computeFaqListItemData = (question) => {
-  return {
-    hasQuestion: !!question.question,
-    questionText: question.question || question.filename.replace('.md', '').replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase()),
-    url: `/faq/${question.category}/${question.filename.replace('.md', '')}/`,
-    statusData: computeStatusData(question),
-    hasMissingContent: (!question.question || !question.answer || question.answer.length === 0)
-  };
-};
-
-/**
- * Pre-compute status data for FAQ items
- * @param {Object} question - FAQ item
- * @returns {Object} - Status data
- */
-const computeStatusData = (question) => {
-  const status = question.Status;
-
-  if (!status) {
-    return { hasStatus: false };
-  }
-
-  const statusMappings = {
-    'draft': { emoji: '⚠️', label: 'Draft', class: 'status-draft' },
-    'pending-guidance': { emoji: '🛑', label: 'Pending Guidance', class: 'status-pending-guidance' },
-    'approved': { emoji: '✅', label: 'Approved', class: 'status-approved' }
-  };
-
-  const mapping = statusMappings[status];
-
-  return {
-    hasStatus: true,
-    status,
-    emoji: mapping ? mapping.emoji : '',
-    label: mapping ? mapping.label : status,
-    cssClass: mapping ? mapping.class : 'status-unknown'
-  };
-};
 
 // =============================================================================
 // LOGGING FUNCTIONS (IMPURE)
@@ -309,8 +249,7 @@ module.exports = function () {
   const stats = generateStats(filesByType, parsedItemsByType, validItemsByType, invalidItemsByType);
 
   // Phase 6: Final data structure assembly
-  const completeData = buildFinalDataStructure(validItemsByType, stats);
-  const finalData = addBackwardCompatibility(completeData);
+  const finalData = buildFinalDataStructure(validItemsByType, stats);
 
   console.log("🎉 Unified content processing complete!");
 

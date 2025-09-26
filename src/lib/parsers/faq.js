@@ -75,7 +75,7 @@ function parseFaqMarkdown(fileContent, filename, category, contentType) {
  * Handles enrichment with guidance and related FAQs
  * @param {Array} faqItems - Array of parsed FAQ items
  * @param {Object} allParsedData - All parsed data by type for cross-referencing
- * @returns {Array} - Array of enriched FAQ items
+ * @returns {Object} - Object with FAQ items and additional computed data
  *
  * NOTE: This function intentionally mutates allParsedData.guidance for cross-referencing.
  * This is a design compromise for bidirectional linking between content types.
@@ -94,7 +94,9 @@ function postProcessFaq(faqItems, allParsedData) {
         // Pre-compute guidance data for templates
         guidanceData: computeGuidanceData(faq, guidanceItems),
         // Pre-compute admin data
-        adminData: computeAdminData(faq)
+        adminData: computeAdminData(faq),
+        // Add FAQ list template data
+        templateData: computeFaqListItemData(faq)
     }));
 
     // Step 3: Enrich guidance with related FAQs (bidirectional linking)
@@ -104,6 +106,7 @@ function postProcessFaq(faqItems, allParsedData) {
     if (allParsedData.guidance) {
         allParsedData.guidance = enrichedGuidance;
     }
+
 
     return faqsWithTemplateData;
 }
@@ -160,6 +163,51 @@ function computeAdminData(faq) {
         githubEditUrl: `https://github.com/orcwg/cra-hub/edit/main/faq/${faq.category}/${faq.filename}`
     };
 }
+
+/**
+ * Pre-compute template data for individual FAQ list items
+ * @param {Object} question - FAQ item
+ * @returns {Object} - Template data
+ */
+function computeFaqListItemData(question) {
+    return {
+        hasQuestion: !!question.question,
+        questionText: question.question || question.filename.replace('.md', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
+        url: question.url,
+        statusData: computeStatusData(question),
+        hasMissingContent: (!question.question || !question.answer || question.answer.length === 0)
+    };
+}
+
+/**
+ * Compute status data for FAQ items
+ * @param {Object} question - FAQ item
+ * @returns {Object} - Status data
+ */
+function computeStatusData(question) {
+    const status = question.Status;
+
+    if (!status) {
+        return { hasStatus: false };
+    }
+
+    const statusMappings = {
+        'draft': { emoji: '⚠️', label: 'Draft', class: 'status-draft' },
+        'pending-guidance': { emoji: '🛑', label: 'Pending Guidance', class: 'status-pending-guidance' },
+        'approved': { emoji: '✅', label: 'Approved', class: 'status-approved' }
+    };
+
+    const mapping = statusMappings[status.toLowerCase()];
+
+    return {
+        hasStatus: true,
+        status,
+        emoji: mapping ? mapping.emoji : '',
+        label: mapping ? mapping.label : status,
+        cssClass: mapping ? mapping.class : 'status-unknown'
+    };
+}
+
 
 module.exports = {
     parseFaqMarkdown,

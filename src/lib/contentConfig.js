@@ -17,19 +17,19 @@ const CONTENT_TYPES = {
   // Frequently Asked Questions
   faq: {
     sourceDir: '_cache/faq',
-    parserPath: '../lib/types/faq',
+    parserPath: '../lib/parsers/faq',
     schemaPath: '../lib/schemas/faq.json',
   },
   // Guidance requests
   guidance: {
     sourceDir: '_cache/faq/pending-guidance',
-    parserPath: '../lib/types/guidance',
+    parserPath: '../lib/parsers/guidance',
     schemaPath: '../lib/schemas/guidance.json',
   },
   // Curated lists of related FAQ items
   lists: {
     sourceDir: 'src/_lists',
-    parserPath: '../lib/types/lists',
+    parserPath: '../lib/parsers/lists',
     schemaPath: '../lib/schemas/lists.json',
   }
 };
