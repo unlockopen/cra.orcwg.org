@@ -5,34 +5,27 @@
   "description": "Schema for guidance request items that need clarification or development",
   "type": "object",
   "properties": {
-    "content": {
+    "rawMarkdown": {
       "type": "string",
       "description": "Raw markdown content of the file"
     },
-    "relatedFaqs": {
-      "type": "array",
-      "description": "List of FAQ items that reference this guidance request",
-      "minItems": 1,
-      "items": {
-        "type": "object",
-        "properties": {
-          "question": {
-            "type": "string",
-            "description": "Question text for the link label"
-          },
-          "url": {
-            "type": "string",
-            "description": "URL to the referencing FAQ",
-            "pattern": "^/faq/"
-          }
-        },
-        "required": ["question", "url"],
-        "additionalProperties": false
-      }
+    "filename": {
+      "type": "string",
+      "description": "Base filename of the guidance document"
+    },
+    "category": {
+      "type": "string",
+      "description": "Category directory path"
+    },
+    "contentType": {
+      "type": "string",
+      "description": "Content type identifier",
+      "const": "guidance"
     },
     "status": {
-      "type": "string",
-      "description": "Current status of the guidance request"
+      "type": ["string", "null"],
+      "description": "Current status of the guidance request",
+      "enum": ["pending-guidance", null]
     },
     "summary": {
       "type": "string",
@@ -53,7 +46,7 @@
       "pattern": "^/pending-guidance/"
     }
   },
-  "required": ["content", "type", "url", "title", "status", "summary", "relatedFaqs"],
+  "required": ["rawMarkdown", "filename", "category", "contentType", "type", "url", "title", "summary"],
   "additionalProperties": true,
   "examples": [
     {
@@ -61,14 +54,11 @@
       "status": "🛑 Pending Guidance",
       "title": "Legal person definition clarification",
       "summary": "Confirmation that _legal persons_ do not include _natural persons_ in the context of the CRA",
-      "content": "---\ntype: guidance-request\nstatus: 🛑 Pending Guidance\n---\n\n# Legal person definition clarification...",
-      "url": "/pending-guidance/legal-person-definition/",
-      "relatedFaqs": [
-        {
-          "question": "What is a _legal person_?",
-          "url": "/faq/legislation/legal-person/"
-        }
-      ]
+      "rawMarkdown": "# Legal person definition clarification\n\n## Guidance needed\n\nConfirmation that _legal persons_ do not include _natural persons_ in the context of the CRA...",
+      "filename": "legal-person-definition.md",
+      "category": "root",
+      "contentType": "guidance",
+      "url": "/pending-guidance/legal-person-definition/"
     }
   ]
 }

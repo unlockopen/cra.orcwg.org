@@ -138,47 +138,76 @@ const generateStats = (filesByType, parsedItemsByType, validItemsByType, invalid
 };
 
 /**
- * Build final data structure
+ * Build final data structure with relational indexes
  * @param {Object} validItemsByType - Valid items by type
  * @param {Object} stats - Processing statistics
- * @returns {Object} - Final data structure
+ * @returns {Object} - Final data structure with indexes
  */
 const buildFinalDataStructure = (validItemsByType, stats) => {
   const completeData = { stats };
 
-  // Add each content type alphabetically
+  // Add non-FAQ content types
   for (const type of Object.keys(validItemsByType)) {
-    completeData[type] = validItemsByType[type];
+    if (type !== 'faq') {
+      completeData[type] = validItemsByType[type];
+    }
   }
 
-  // Generate FAQ list data from VALID FAQs only
-  if (completeData.faq && completeData.faq.length > 0) {
-    completeData.faqListData = generateFaqListData(completeData.faq);
+  // Extract categories with their FAQ IDs and create FAQ lookup index
+  if (validItemsByType.faq && validItemsByType.faq.length > 0) {
+    const categoriesWithFaqs = {};
+    const faq = {};
+
+    validItemsByType.faq.forEach(faqItem => {
+      const faqKey = `${faqItem.category}/${faqItem.filename.replace('.md', '')}`;
+
+      // Build categories
+      if (!categoriesWithFaqs[faqItem.category]) {
+        categoriesWithFaqs[faqItem.category] = [];
+      }
+      categoriesWithFaqs[faqItem.category].push(faqKey);
+
+      // Build FAQ lookup
+      faq[faqKey] = faqItem;
+    });
+
+    completeData.categories = categoriesWithFaqs;
+    completeData.faq = faq;
+  } else {
+    completeData.categories = {};
+    completeData.faq = {};
   }
+
+  // Create cross-reference links for FAQ-guidance relationships
+  completeData.crossReferences = createCrossReferences(validItemsByType);
 
   return completeData;
 };
 
 /**
- * Generate FAQ list template data from valid FAQ items
- * @param {Array} faqItems - Valid FAQ items only
- * @returns {Array} - FAQ list data organized by category
+ * Create cross-reference links between FAQs and guidance
+ * @param {Object} validItemsByType - Valid items by type
+ * @returns {Object} - Cross-reference links
  */
-const generateFaqListData = (faqItems) => {
-  // Extract categories from valid FAQs only
-  const categories = [...new Set(faqItems.map(faq => faq.category))].sort();
+const createCrossReferences = (validItemsByType) => {
+  const faqs = validItemsByType.faq || [];
+  const faqGuidanceLinks = {};
 
-  return categories.map(category => {
-    const questionsInCategory = faqItems.filter(faq => faq.category === category);
+  // Build FAQ -> Guidance links
+  faqs.forEach(faq => {
+    const guidanceKey = faq.guidanceKey;
+    if (guidanceKey) {
+      if (!faqGuidanceLinks[guidanceKey]) {
+        faqGuidanceLinks[guidanceKey] = [];
+      }
+      const faqKey = `${faq.category}/${faq.filename.replace('.md', '')}`;
+      faqGuidanceLinks[guidanceKey].push(faqKey);
+    }
+  });
 
-    return {
-      category,
-      categoryTitle: category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-      questions: questionsInCategory,
-      hasQuestions: questionsInCategory.length > 0
-    };
-  }).filter(categoryData => categoryData.hasQuestions);
+  return { faqGuidanceLinks };
 };
+
 
 
 // =============================================================================
@@ -268,6 +297,20 @@ module.exports = function () {
 
   // Phase 6: Final data structure assembly
   const finalData = buildFinalDataStructure(validItemsByType, stats);
+
+  // Write debug data file
+  try {
+    const fs = require('fs');
+    const debugDir = '/tmp/claude';
+    if (!fs.existsSync(debugDir)) {
+      fs.mkdirSync(debugDir, { recursive: true });
+    }
+    const debugPath = path.join(debugDir, 'orcwg-debug-data.json');
+    fs.writeFileSync(debugPath, JSON.stringify(finalData, null, 2));
+    console.log("📄 Debug data written to:", debugPath);
+  } catch (error) {
+    console.warn("⚠️ Failed to write debug data:", error.message);
+  }
 
   console.log("🎉 Unified content processing complete!");
 

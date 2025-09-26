@@ -11,10 +11,10 @@
       "format": "uri",
       "pattern": "^https://github\\.com/"
     },
-    "Status": {
-      "type": "string",
+    "status": {
+      "type": ["string", "null"],
       "description": "Publication status of the FAQ",
-      "enum": ["approved", "draft", "pending-guidance"]
+      "enum": ["approved", "draft", "pending-guidance", null]
     },
     "answer": {
       "type": "string",
@@ -45,11 +45,11 @@
       "pattern": "^/faq/"
     }
   },
-  "required": ["Status", "question", "answer", "category", "url"],
+  "required": ["status", "question", "answer", "category", "url"],
   "additionalProperties": true,
   "examples": [
     {
-      "Status": "approved",
+      "status": "approved",
       "Related issue": "https://github.com/orcwg/cra-hub/issues/154",
       "question": "What is the Cyber Resilience Act (CRA)?",
       "answer": "The Cyber Resilience Act (CRA) is a new EU Regulation...",
@@ -57,7 +57,7 @@
       "url": "/faq/cra-itself/cra/"
     },
     {
-      "Status": "draft",
+      "status": "draft",
       "Related issue": "https://github.com/orcwg/cra-hub/issues/72",
       "question": "What is a _security attestation_ in the CRA?",
       "answer": "Security attestations in the CRA are an optional extension...",

@@ -117,9 +117,15 @@ const createUrl = (contentType, category, filename) => {
 const normalizeContent = (content) => {
   if (!content) return content;
 
-  // Replace standalone "cra" (case-insensitive) with "CRA"
+  // Replace hyphens with spaces
+  const spacesReplaced = content.replace(/-/g, ' ');
+
+  // Apply title case (capitalize first letter of each word)
+  const titleCased = spacesReplaced.replace(/\b\w/g, l => l.toUpperCase());
+
+  // Then replace standalone "cra" or "Cra" (case-insensitive) with "CRA"
   // Uses word boundaries to avoid replacing parts of other words
-  return content.replace(/\bcra\b/gi, 'CRA');
+  return titleCased.replace(/\bcra\b/gi, 'CRA');
 };
 
 /**
@@ -140,15 +146,12 @@ const parseBaseMarkdown = (fileContent, filename, category, contentType = 'faq')
     return null;
   }
 
-  // Normalize content for consistent terminology
-  const normalizedContent = normalizeContent(content);
-
   // Create base item with common fields only
   return {
     filename,
     category,
     contentType,
-    rawContent: normalizedContent,
+    rawMarkdown: content,
     url: createUrl(contentType, category, filename),
     // Flatten frontmatter to root level
     ...frontmatter
@@ -157,23 +160,30 @@ const parseBaseMarkdown = (fileContent, filename, category, contentType = 'faq')
 
 
 /**
- * Normalize status
+ * Normalize status to lowercase
  * @param {Object} item - Item to normalize
  * @returns {Object} - Normalized item
  */
 const normalizeStatus = (item) => {
-  let status = item.Status;
+  let status = item.Status || item.status;
 
   if (item['pending-guidance'] || item['guidance-id']) {
     status = 'pending-guidance';
   } else if (status) {
-    status = status.replace(/⚠️\s*/, '').trim();
-    status = status.toLowerCase().includes('draft') ? 'draft' : 'approved';
+    status = status.replace(/🛑\s*/, '').replace(/⚠️\s*/, '').trim();
+    if (status.toLowerCase().includes('draft')) {
+      status = 'draft';
+    } else if (status.toLowerCase().includes('pending guidance')) {
+      status = 'pending-guidance';
+    } else {
+      status = 'approved';
+    }
   } else {
-    status = 'approved';
+    status = null;
   }
 
-  return { ...item, Status: status };
+  const { Status, ...itemWithoutStatus } = item;
+  return { ...itemWithoutStatus, status: status };
 };
 
 /**
@@ -240,15 +250,12 @@ const enrichFaqsWithGuidance = (faqItems, guidanceItems) => {
 
       return {
         ...faq,
-        hasPendingGuidanceCallout: true,
-        relatedGuidance
+        // Only add fields if they exist - no boolean flags
+        ...(relatedGuidance && { relatedGuidance })
       };
     }
 
-    return {
-      ...faq,
-      hasPendingGuidanceCallout: false
-    };
+    return faq; // No changes if no guidance
   });
 };
 
@@ -533,12 +540,12 @@ const logValidationResults = (validItems, schemaType, infoLogger = console.log) 
  * @param {Function} validator - Validation function
  * @param {string} schemaType - Schema type
  * @param {string} context - Context
- * @param {Function} errorLogger - Error logger
+ * @param {Function} _errorLogger - Error logger (unused, errors handled by validator)
  * @param {Function} infoLogger - Info logger
  * @returns {Array} - Valid items
  */
-const validateAndFilterWithLogging = (items, validator, schemaType, context, errorLogger, infoLogger) => {
-  const { valid, invalid } = partitionByValidation(items, validator, schemaType, context);
+const validateAndFilterWithLogging = (items, validator, schemaType, context, _errorLogger, infoLogger) => {
+  const { valid } = partitionByValidation(items, validator, schemaType, context);
   logValidationResults(valid, schemaType, infoLogger);
   return valid;
 };

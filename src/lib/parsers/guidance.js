@@ -83,44 +83,24 @@ function extractGuidanceSummary(content) {
 }
 
 /**
- * Pure guidance enhancer - adds guidance-specific fields to base item
+ * Pure guidance enhancer - adds minimal guidance-specific fields
  * @param {Object} baseItem - Base item from parseBaseMarkdown
- * @returns {Object} - Enhanced guidance item
+ * @returns {Object} - Clean enhanced guidance item
  */
 function enhanceGuidanceItem(baseItem) {
-    // Extract guidance-specific semantic content
-    const titleMatch = baseItem.rawContent.match(/^#\s+(.+)$/m);
-    const title = extractTitle(baseItem.rawContent);
-    const answer = extractAnswer(baseItem.rawContent, titleMatch);
-    const summary = extractGuidanceSummary(baseItem.rawContent);
+    // Extract minimal guidance-specific semantic content
+    const title = extractTitle(baseItem.rawMarkdown);
+    const summary = extractGuidanceSummary(baseItem.rawMarkdown);
 
     return {
         ...baseItem,
-        // Guidance-specific semantic fields
+        // Only essential guidance fields
         title: title || baseItem.title || baseItem.filename.replace('.md', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase()),
-        answer,
-        summary,
-        // Keep raw content for reference
-        content: baseItem.rawContent,
-        // Pre-compute template data
-        templateData: computeGuidanceTemplateData(baseItem, baseItem.filename)
+        summary
     };
 }
 
 
-/**
- * Pre-compute template data for guidance items
- * @param {Object} baseItem - Base parsed item
- * @param {string} filename - The filename
- * @returns {Object} - Template data
- */
-function computeGuidanceTemplateData(baseItem, filename) {
-    return {
-        hasRelatedIssue: !!baseItem["Related issue"],
-        relatedIssue: baseItem["Related issue"] || null,
-        githubEditUrl: `https://github.com/orcwg/cra-hub/edit/main/faq/pending-guidance/${filename}`
-    };
-}
 
 module.exports = {
     enhanceGuidanceItem

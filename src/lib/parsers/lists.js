@@ -37,9 +37,9 @@ function extractDescription(content, titleMatch) {
  */
 function enhanceListsItem(baseItem) {
     // Extract lists-specific semantic content
-    const titleMatch = baseItem.rawContent.match(/^#\s+(.+)$/m);
-    const title = extractTitle(baseItem.rawContent);
-    const description = extractDescription(baseItem.rawContent, titleMatch);
+    const titleMatch = baseItem.rawMarkdown.match(/^#\s+(.+)$/m);
+    const title = extractTitle(baseItem.rawMarkdown);
+    const description = extractDescription(baseItem.rawMarkdown, titleMatch);
 
     const computedTitle = title || baseItem.title || baseItem.filename.replace('.md', '').replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
     const computedDescription = description || '';
@@ -52,7 +52,7 @@ function enhanceListsItem(baseItem) {
         order: baseItem.order ? parseInt(baseItem.order, 10) : 999,
         faqs: baseItem.faqs || [],
         // Keep raw content for reference
-        content: baseItem.rawContent,
+        content: baseItem.rawMarkdown,
         // Legacy compatibility - some templates may expect these
         question: title,
         answer: computedDescription,

@@ -15,12 +15,15 @@ eleventyComputed:
   </div>
 
   <div class="pending-guidance-content">
-    {{ item.content | markdown | safe }}
+    {{ item.rawMarkdown | markdown | safe }}
 
     <div class="related-faqs-inline">
       <ul>
-        {% for faq in item.relatedFaqs %}
-        <li><a href="{{ faq.url }}">{{ faq.question | markdown | safe | striptags }}</a></li>
+        {% set guidanceKey = item.filename | replace('.md', '') %}
+        {% set relatedFaqKeys = orcwgImport.crossReferences.faqGuidanceLinks[guidanceKey] %}
+        {% for faqKey in relatedFaqKeys %}
+          {% set faq = orcwgImport.faq[faqKey] %}
+          <li><a href="{{ faq.url }}">{{ faq.question | markdown | safe | striptags }}</a></li>
         {% endfor %}
       </ul>
     </div>
@@ -28,7 +31,7 @@ eleventyComputed:
 
   <div class="edit-on-github">
     <span class="edit-icon">✏️</span>
-    <a href="{{ item.templateData.githubEditUrl }}" target="_blank" rel="noopener">Edit this guidance request on GitHub</a>
+    <a href="https://github.com/orcwg/cra-hub/edit/main/faq/pending-guidance/{{ item.filename }}" target="_blank" rel="noopener">Edit this guidance request on GitHub</a>
   </div>
 </div>
 

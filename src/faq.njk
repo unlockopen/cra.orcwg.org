@@ -4,6 +4,7 @@ pagination:
   data: orcwgImport.faq
   size: 1
   alias: item
+  resolve: values
 permalink: "{{ item.url }}"
 eleventyComputed:
   title: "{{ item.question }}"
@@ -23,16 +24,17 @@ eleventyComputed:
 </div>
 {% endif %}
 
-{% if item.guidanceData %}
+{% if item.guidanceKey %}
+{% set guidance = (orcwgImport.guidance | selectattr('filename', 'equalto', item.guidanceKey + '.md') | first) %}
 <div class="faq-status-display">
   <p><strong>🛑 Pending Guidance</strong></p>
-  {% if item.guidanceData.hasSpecificGuidance %}
+  {% if guidance and guidance.summary %}
     <div class="guidance-content">
       <p>This FAQ awaits commission guidance on:</p>
-      <p class="guidance-phrase">{{ item.guidanceData.summary }}</p>
+      <p class="guidance-phrase">{{ guidance.summary }}</p>
     </div>
     <div class="guidance-actions">
-      <a href="{{ item.guidanceData.guidanceUrl }}" class="guidance-link">View full guidance request →</a>
+      <a href="/pending-guidance/{{ item.guidanceKey }}/" class="guidance-link">View full guidance request →</a>
     </div>
   {% else %}
     <p>This FAQ awaits commission guidance.</p>
@@ -45,22 +47,22 @@ eleventyComputed:
 </button>
 
 <div class="admin-info" style="display: none;">
-  {% if item.adminData.hasGuidance %}
+  {% if item.guidanceKey %}
   <div class="pending-guidance-link">
-    <strong>🛑 Related Pending Guidance:</strong> <a href="{{ item.adminData.guidanceUrl }}">{{ item.adminData.guidanceTitle }}</a>
+    <strong>🛑 Related Pending Guidance:</strong> <a href="/pending-guidance/{{ item.guidanceKey }}/">{{ item.guidanceKey | replace('-', ' ') | title }}</a>
     <p><em>This FAQ is affected by pending guidance that is currently being developed.</em></p>
   </div>
   {% endif %}
 
-  {% if item.adminData.hasRelatedIssue %}
+  {% if item["Related issue"] %}
   <div class="related-issue">
-    <strong>Related issue:</strong> <a href="{{ item.adminData.relatedIssue }}">{{ item.adminData.relatedIssue }}</a>
+    <strong>Related issue:</strong> <a href="{{ item["Related issue"] }}">{{ item["Related issue"] }}</a>
   </div>
   {% endif %}
 
   <div class="edit-on-github">
     <span class="edit-icon">✏️</span>
-    <a href="{{ item.adminData.githubEditUrl }}" target="_blank" rel="noopener">Edit this FAQ on GitHub</a>
+    <a href="{{ item.githubEditUrl }}" target="_blank" rel="noopener">Edit this FAQ on GitHub</a>
   </div>
 </div>
 

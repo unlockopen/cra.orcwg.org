@@ -10,34 +10,33 @@ permalink: "/faq-list/"
 </div>
 
 <div class="faq-index">
-  {% for categoryData in orcwgImport.faqListData %}
-    <section class="category-section">
-      <h2 class="category-title">{{ categoryData.categoryTitle }}</h2>
-      <ul class="question-list">
-        {% for question in categoryData.questions %}
-          <li class="question-item">
-            <a href="{{ question.templateData.url }}" class="question-link">
-              <span class="question-text">
-                {% if question.templateData.hasQuestion %}
-                  {{ question.question | markdown | safe }}
-                {% else %}
-                  <span class="missing-content">{{ question.templateData.questionText }}</span>
-                  <span class="content-note">⚠️ Missing question</span>
-                {% endif %}
-                <div class="admin-indicators" style="display: none;">
-                  {% if question.templateData.statusData.hasStatus %}
-                    <span class="status-indicator {{ question.templateData.statusData.cssClass }}">{{ question.templateData.statusData.emoji }} {{ question.templateData.statusData.label }}</span>
-                  {% endif %}
-                  {% if question.templateData.hasMissingContent %}
-                    <span class="missing-answer-indicator">⚠️ Missing answer</span>
-                  {% endif %}
-                </div>
-              </span>
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
-    </section>
+  {% for category, faqKeys in orcwgImport.categories %}
+    {% if faqKeys | length > 0 %}
+      <section class="category-section">
+        <h2 class="category-title">{{ category | categoryTitle }}</h2>
+        <ul class="question-list">
+          {% for faqKey in faqKeys %}
+            {% set question = orcwgImport.faq[faqKey] %}
+            <li class="question-item">
+              <a href="{{ question.url }}" class="question-link">
+                <span class="question-text">
+                    {{ question.question | markdown | safe }}
+                  <div class="admin-indicators" style="display: none;">
+                      <span class="status-indicator status-{{ question.status }}">
+                        {% if question.status == "draft" %}⚠️ Draft
+                        {% elif question.status == "pending-guidance" %}🛑 Pending Guidance
+                        {% elif question.status == "approved" %}✅ Approved
+                        {% else %}{{ question.status }}
+                        {% endif %}
+                      </span>
+                  </div>
+                </span>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </section>
+    {% endif %}
   {% endfor %}
 </div>
 
