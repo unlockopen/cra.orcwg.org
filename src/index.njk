@@ -14,10 +14,12 @@ permalink: "/"
     <p>Complete list of all FAQ topics organized by category</p>
   </a>
 
+  {% if orcwgImport.list and orcwgImport.list.length > 0 %}
   <a href="/lists/" class="home-nav-card">
     <h2>Curated Lists</h2>
     <p>Carefully selected FAQ collections for specific audiences and topics</p>
   </a>
+  {% endif %}
 
   <a href="/pending-guidance/" class="home-nav-card">
     <h2>Pending Guidance</h2>
