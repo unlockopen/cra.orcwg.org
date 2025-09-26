@@ -1,6 +1,7 @@
 ---
 title: "Getting Started with CRA"
 order: 1
+status: draft
 faqs:
 - cra-itself/cra
 - cra-itself/scope

@@ -1,6 +1,7 @@
 ---
 title: "Commercial Use and Monetization"
 order: 3
+status: draft
 faqs:
 - maintainers/monetization
 - maintainers/no-monetization

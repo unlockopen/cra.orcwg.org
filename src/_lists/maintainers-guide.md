@@ -1,6 +1,7 @@
 ---
 title: "Guide for Open Source Maintainers"
 order: 2
+status: draft
 faqs:
 - maintainers/should-i-worry
 - stewards/what-is-a-steward
