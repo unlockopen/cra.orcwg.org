@@ -38,19 +38,6 @@ const enhanceBaseItems = (baseItems, enhancer) => {
   return baseItems.map(enhancer);
 };
 
-/**
- * DEPRECATED: Parse files for a single content type
- * Use parseFilesToBaseItems + enhanceBaseItems instead
- * @deprecated
- */
-const parseFilesForType = (files, parser, fileReader, contentType) => {
-  return files
-    .map(file => {
-      const content = fileReader(file.fullPath);
-      return parser(content, file.filename, file.category, contentType);
-    })
-    .filter(Boolean);
-};
 
 /**
  * Parse all content types using pure two-phase approach

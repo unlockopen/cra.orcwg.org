@@ -107,15 +107,6 @@ function enhanceGuidanceItem(baseItem) {
     };
 }
 
-/**
- * DEPRECATED: Custom parser for guidance markdown files
- * Use parseBaseMarkdown + enhanceGuidanceItem instead
- * @deprecated
- */
-function parseGuidanceMarkdown(fileContent, filename, category, contentType) {
-    const { parseMarkdown } = require("../contentProcessor");
-    return parseMarkdown(fileContent, filename, category, contentType, enhanceGuidanceItem);
-}
 
 /**
  * Pre-compute template data for guidance items
@@ -132,6 +123,5 @@ function computeGuidanceTemplateData(baseItem, filename) {
 }
 
 module.exports = {
-    enhanceGuidanceItem,
-    parseGuidanceMarkdown
+    enhanceGuidanceItem
 };

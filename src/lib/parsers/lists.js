@@ -61,15 +61,6 @@ function enhanceListsItem(baseItem) {
     };
 }
 
-/**
- * DEPRECATED: Custom parser for list markdown files (main entry point)
- * Use parseBaseMarkdown + enhanceListsItem instead
- * @deprecated
- */
-function parseListsMarkdown(fileContent, filename, category, contentType) {
-    const { parseMarkdown } = require("../contentProcessor");
-    return parseMarkdown(fileContent, filename, category, contentType, enhanceListsItem);
-}
 
 /**
  * Post-process lists items after basic parsing
@@ -125,6 +116,5 @@ function computeListTemplateData(listItem, items) {
 
 module.exports = {
     enhanceListsItem,
-    parseListsMarkdown,
     postProcessLists
 };

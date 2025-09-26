@@ -17,13 +17,6 @@ const matter = require("gray-matter");
 // PURE FUNCTIONS - CORE BUSINESS LOGIC
 // =============================================================================
 
-/**
- * Create parser function name from content type
- * @param {string} contentType - The content type
- * @returns {string} - The parser function name
- */
-const createParserFunctionName = (contentType) =>
-  `parse${contentType.charAt(0).toUpperCase() + contentType.slice(1)}Markdown`;
 
 /**
  * Create post-processor function name from content type
@@ -57,26 +50,6 @@ const getEnhancerFromRegistry = (registry, contentType) => {
   return null;
 };
 
-/**
- * DEPRECATED: Get parser from registry
- * Use getEnhancerFromRegistry + parseBaseMarkdown instead
- * @deprecated
- */
-const getParserFromRegistry = (registry, contentType, defaultParser) => {
-  const specializedParser = registry[contentType];
-  if (!specializedParser) return defaultParser;
-
-  const parserFunctionName = createParserFunctionName(contentType);
-  if (specializedParser[parserFunctionName]) {
-    return specializedParser[parserFunctionName];
-  }
-
-  if (specializedParser.parseMarkdown) {
-    return specializedParser.parseMarkdown;
-  }
-
-  return defaultParser;
-};
 
 /**
  * Get post-processor from registry
@@ -182,42 +155,6 @@ const parseBaseMarkdown = (fileContent, filename, category, contentType = 'faq')
   };
 };
 
-/**
- * DEPRECATED: Base parser with specialized parsing callback
- * Use parseBaseMarkdown + specialized enhancer functions instead
- * @deprecated
- */
-const parseMarkdown = (fileContent, filename, category, contentType = 'faq', specializedParser = null) => {
-  if (!fileContent) return null;
-
-  const { frontmatter, content } = fileContent;
-
-  // Skip files with no frontmatter
-  if (!frontmatter || Object.keys(frontmatter).length === 0) {
-    return null;
-  }
-
-  // Normalize content for consistent terminology
-  const normalizedContent = normalizeContent(content);
-
-  // Create base item with common fields
-  const baseItem = {
-    filename,
-    category,
-    rawContent: normalizedContent,
-    url: createUrl(contentType, category, filename),
-    // Flatten frontmatter to root level
-    ...frontmatter
-  };
-
-  // Apply specialized parsing if provided
-  if (specializedParser && typeof specializedParser === 'function') {
-    return specializedParser(baseItem);
-  }
-
-  // Return base item if no specialized parser
-  return baseItem;
-};
 
 /**
  * Normalize status
@@ -622,14 +559,12 @@ const createContentProcessor = (dependencies = {}) => {
     validator = require("./validation").validateData,
     fileReader = readFileContentIO,
     directoryWalker = walkConfiguredDirectories,
-    logger = console,
-    markdownParser = parseMarkdown
+    logger = console
   } = dependencies;
 
   return {
     // Core business logic functions
     parseBaseMarkdown: parseBaseMarkdown,
-    parseMarkdown: markdownParser,
     normalizeStatus: normalizeStatus,
     enrichFaqsWithGuidance: enrichFaqsWithGuidance,
     enrichGuidanceWithFaqs: enrichGuidanceWithFaqs,
@@ -637,7 +572,6 @@ const createContentProcessor = (dependencies = {}) => {
 
     // Registry functions
     getEnhancer: (contentType) => getEnhancerFromRegistry(parserRegistry, contentType),
-    getParser: (contentType) => getParserFromRegistry(parserRegistry, contentType, markdownParser),
     getPostProcessor: (contentType) => getPostProcessorFromRegistry(parserRegistry, contentType),
 
     // I/O functions with dependency injection
@@ -664,7 +598,6 @@ module.exports = {
 
   // Testable functions
   parseBaseMarkdown,
-  parseMarkdown,
   normalizeContent,
   normalizeStatus,
   enrichFaqsWithGuidance,

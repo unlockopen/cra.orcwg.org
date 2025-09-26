@@ -57,15 +57,6 @@ function enhanceFaqItem(baseItem) {
     };
 }
 
-/**
- * DEPRECATED: Custom parser for FAQ markdown files (main entry point)
- * Use parseBaseMarkdown + enhanceFaqItem instead
- * @deprecated
- */
-function parseFaqMarkdown(fileContent, filename, category, contentType) {
-    const { parseMarkdown } = require("../contentProcessor");
-    return parseMarkdown(fileContent, filename, category, contentType, enhanceFaqItem);
-}
 
 /**
  * Post-process FAQ items after parsing
@@ -208,6 +199,5 @@ function computeStatusData(question) {
 
 module.exports = {
     enhanceFaqItem,
-    parseFaqMarkdown,
     postProcessFaq
 };
