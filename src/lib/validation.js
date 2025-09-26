@@ -36,6 +36,7 @@ function logValidationError(message) {
     }
 }
 
+
 // Initialize AJV with better error messages
 const ajv = new Ajv({
     allErrors: true,
@@ -101,7 +102,7 @@ function validateData(data, schemaType, context = '') {
         logValidationError(errorDetails);
 
         // Only show summary in console
-        console.error(`    ❌ Schema validation failed for ${schemaType}${context ? ` (${context})` : ''} (details in validation-errors.log)`);
+        console.error(`    ❌ Schema validation failed for ${schemaType}${context ? ` (${context})` : ''}`);
 
         return { valid: false, errors };
     }
@@ -135,7 +136,7 @@ function validateArray(dataArray, schemaType, context = '') {
         logValidationError(errorSummary);
 
         // Only show summary in console
-        console.error(`    ❌ Found ${invalidItems.length} invalid ${schemaType} items (details in validation-errors.log)`);
+        console.error(`    ❌ Found ${invalidItems.length} invalid ${schemaType} items`);
         invalidItems.forEach(result => {
             const itemDescription = result.item.filename || result.item.title || `item ${result.index}`;
             console.error(`   • Excluded: ${itemDescription}`);

@@ -318,6 +318,7 @@ module.exports = function () {
 
   // Phase 4: Validation (Pure + I/O for logging)
   console.log("🔍 Validating content against schemas...");
+  console.log("    📄 Validation errors logged in ./validation-errors.log");
   const { valid: validItemsByType, invalid: invalidItemsByType } = validateAllContentTypes(
     postProcessedItems,
     processor.validateAndFilterContent

@@ -18,8 +18,7 @@
     },
     "answer": {
       "type": "string",
-      "description": "The markdown content answering the question",
-      "minLength": 1
+      "description": "The markdown content answering the question"
     },
     "category": {
       "type": "string",
