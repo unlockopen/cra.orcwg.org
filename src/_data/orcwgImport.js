@@ -138,74 +138,43 @@ const generateStats = (filesByType, parsedItemsByType, validItemsByType, invalid
 };
 
 /**
- * Build final data structure with relational indexes
+ * Build final data structure using specialized parsers
  * @param {Object} validItemsByType - Valid items by type
  * @param {Object} stats - Processing statistics
- * @returns {Object} - Final data structure with indexes
+ * @param {Object} parserRegistry - Parser registry with structure builders
+ * @returns {Object} - Final data structure
  */
-const buildFinalDataStructure = (validItemsByType, stats) => {
+const buildFinalDataStructure = (validItemsByType, stats, parserRegistry) => {
   const completeData = { stats };
 
-  // Add non-FAQ content types
+  // Build structures for each content type
   for (const type of Object.keys(validItemsByType)) {
-    if (type !== 'faq') {
-      completeData[type] = validItemsByType[type];
+    const items = validItemsByType[type];
+    const parser = parserRegistry[type];
+
+    if (parser && parser.buildStructure) {
+      // Use specialized structure builder
+      const structure = parser.buildStructure(items);
+      Object.assign(completeData, structure);
+    } else {
+      // Default to array for types without specialized structure
+      completeData[type] = items;
     }
   }
 
-  // Extract categories with their FAQ IDs and create FAQ lookup index
-  if (validItemsByType.faq && validItemsByType.faq.length > 0) {
-    const categoriesWithFaqs = {};
-    const faq = {};
-
-    validItemsByType.faq.forEach(faqItem => {
-      const faqKey = `${faqItem.category}/${faqItem.filename.replace('.md', '')}`;
-
-      // Build categories
-      if (!categoriesWithFaqs[faqItem.category]) {
-        categoriesWithFaqs[faqItem.category] = [];
-      }
-      categoriesWithFaqs[faqItem.category].push(faqKey);
-
-      // Build FAQ lookup
-      faq[faqKey] = faqItem;
-    });
-
-    completeData.categories = categoriesWithFaqs;
-    completeData.faq = faq;
-  } else {
-    completeData.categories = {};
-    completeData.faq = {};
+  // Create cross-references using all parsers
+  const crossReferences = {};
+  for (const type of Object.keys(validItemsByType)) {
+    const parser = parserRegistry[type];
+    if (parser && parser.createCrossReferences && validItemsByType[type]) {
+      const typeReferences = parser.createCrossReferences(validItemsByType[type]);
+      Object.assign(crossReferences, typeReferences);
+    }
   }
 
-  // Create cross-reference links for FAQ-guidance relationships
-  completeData.crossReferences = createCrossReferences(validItemsByType);
+  completeData.crossReferences = crossReferences;
 
   return completeData;
-};
-
-/**
- * Create cross-reference links between FAQs and guidance
- * @param {Object} validItemsByType - Valid items by type
- * @returns {Object} - Cross-reference links
- */
-const createCrossReferences = (validItemsByType) => {
-  const faqs = validItemsByType.faq || [];
-  const faqGuidanceLinks = {};
-
-  // Build FAQ -> Guidance links
-  faqs.forEach(faq => {
-    const guidanceKey = faq.guidanceKey;
-    if (guidanceKey) {
-      if (!faqGuidanceLinks[guidanceKey]) {
-        faqGuidanceLinks[guidanceKey] = [];
-      }
-      const faqKey = `${faq.category}/${faq.filename.replace('.md', '')}`;
-      faqGuidanceLinks[guidanceKey].push(faqKey);
-    }
-  });
-
-  return { faqGuidanceLinks };
 };
 
 
@@ -296,7 +265,7 @@ module.exports = function () {
   const stats = generateStats(filesByType, parsedItemsByType, validItemsByType, invalidItemsByType);
 
   // Phase 6: Final data structure assembly
-  const finalData = buildFinalDataStructure(validItemsByType, stats);
+  const finalData = buildFinalDataStructure(validItemsByType, stats, parserRegistry);
 
   // Write debug data file
   try {

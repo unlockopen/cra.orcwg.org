@@ -25,7 +25,7 @@ eleventyComputed:
 {% endif %}
 
 {% if item.guidanceKey %}
-{% set guidance = (orcwgImport.guidance | selectattr('filename', 'equalto', item.guidanceKey + '.md') | first) %}
+{% set guidance = orcwgImport.guidance[item.guidanceKey] %}
 <div class="faq-status-display">
   <p><strong>🛑 Pending Guidance</strong></p>
   {% if guidance and guidance.summary %}

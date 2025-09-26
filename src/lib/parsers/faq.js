@@ -78,9 +78,66 @@ function postProcessFaq(faqItems, allParsedData) {
     });
 }
 
+/**
+ * Convert FAQ array to keyed object structure with categories
+ * @param {Array} faqItems - Array of processed FAQ items
+ * @returns {Object} - Object with faq lookup and categories structure
+ */
+function buildFaqStructure(faqItems) {
+    if (!faqItems || faqItems.length === 0) {
+        return {
+            categories: {},
+            faq: {}
+        };
+    }
 
+    const categoriesWithFaqs = {};
+    const faq = {};
+
+    faqItems.forEach(faqItem => {
+        const faqKey = `${faqItem.category}/${faqItem.filename.replace('.md', '')}`;
+
+        // Build categories
+        if (!categoriesWithFaqs[faqItem.category]) {
+            categoriesWithFaqs[faqItem.category] = [];
+        }
+        categoriesWithFaqs[faqItem.category].push(faqKey);
+
+        // Build FAQ lookup
+        faq[faqKey] = faqItem;
+    });
+
+    return {
+        categories: categoriesWithFaqs,
+        faq
+    };
+}
+
+/**
+ * Create cross-reference links between FAQs and guidance
+ * @param {Array} faqItems - Array of FAQ items
+ * @returns {Object} - Cross-reference links
+ */
+function createFaqGuidanceCrossReferences(faqItems) {
+    const faqGuidanceLinks = {};
+
+    faqItems.forEach(faq => {
+        const guidanceKey = faq.guidanceKey;
+        if (guidanceKey) {
+            if (!faqGuidanceLinks[guidanceKey]) {
+                faqGuidanceLinks[guidanceKey] = [];
+            }
+            const faqKey = `${faq.category}/${faq.filename.replace('.md', '')}`;
+            faqGuidanceLinks[guidanceKey].push(faqKey);
+        }
+    });
+
+    return { faqGuidanceLinks };
+}
 
 module.exports = {
     enhanceFaqItem,
-    postProcessFaq
+    postProcessFaq,
+    buildStructure: buildFaqStructure,
+    createCrossReferences: createFaqGuidanceCrossReferences
 };

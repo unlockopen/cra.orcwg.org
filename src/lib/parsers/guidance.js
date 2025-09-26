@@ -100,8 +100,27 @@ function enhanceGuidanceItem(baseItem) {
     };
 }
 
+/**
+ * Convert guidance array to keyed object structure
+ * @param {Array} guidanceItems - Array of processed guidance items
+ * @returns {Object} - Keyed guidance object wrapped for proper assignment
+ */
+function buildGuidanceStructure(guidanceItems) {
+    if (!guidanceItems || guidanceItems.length === 0) {
+        return { guidance: {} };
+    }
 
+    const guidance = {};
+
+    guidanceItems.forEach(guidanceItem => {
+        const guidanceKey = guidanceItem.filename.replace('.md', '');
+        guidance[guidanceKey] = guidanceItem;
+    });
+
+    return { guidance };
+}
 
 module.exports = {
-    enhanceGuidanceItem
+    enhanceGuidanceItem,
+    buildStructure: buildGuidanceStructure
 };
