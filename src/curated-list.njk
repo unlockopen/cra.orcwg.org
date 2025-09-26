@@ -1,24 +1,24 @@
 ---
 layout: layout.njk
 pagination:
-  data: curatedLists
+  data: orcwgImport.lists
   size: 1
   alias: listData
   addAllPagesToCollections: true
-permalink: "/lists/{{ listData.key }}/"
+permalink: "{{ listData.url }}"
 eleventyComputed:
-  title: "{{ listData.value.title }}"
+  title: "{{ listData.title }}"
 ---
 
 <div class="curated-list-description">
-  <p>{{ listData.value.description }}</p>
+  <p>{{ listData.templateData.description }}</p>
 </div>
 
 <div class="faq-index">
   <section class="category-section">
-    <h2 class="category-title">{{ listData.value.title }}</h2>
+    <h2 class="category-title">{{ listData.title }}</h2>
     <ul class="question-list">
-      {% for item in listData.value.items %}
+      {% for item in listData.items %}
         <li class="question-item">
           <a href="{{ item.url }}" class="question-link">
             <span class="question-text">

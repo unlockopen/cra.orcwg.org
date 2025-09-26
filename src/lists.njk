@@ -10,13 +10,11 @@ permalink: "/lists/"
 </div>
 
 <div class="curated-lists-grid">
-  {% for listItem in curatedLists %}
-    {% if listItem.value.count > 0 %}
-      <a href="/lists/{{ listItem.key }}/" class="curated-list-card">
-        <h2 class="list-title">{{ listItem.value.title }}</h2>
-        <p class="list-description">{{ listItem.value.description }}</p>
-      </a>
-    {% endif %}
+  {% for listItem in orcwgImport.lists %}
+    <a href="{{ listItem.url }}" class="curated-list-card">
+      <h2 class="list-title">{{ listItem.title }}</h2>
+      <p class="list-description">{{ listItem.templateData.description }}</p>
+    </a>
   {% endfor %}
 </div>
 

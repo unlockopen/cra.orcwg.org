@@ -1,10 +1,10 @@
 ---
 layout: layout.njk
 pagination:
-  data: pendingGuidance
+  data: orcwgImport.guidance
   size: 1
   alias: item
-permalink: "/pending-guidance/{{ item.filename | replace('.md', '') }}/"
+permalink: "{{ item.url }}"
 eleventyComputed:
   title: "{{ item.title or 'Pending Guidance' }}"
 ---
@@ -15,28 +15,26 @@ eleventyComputed:
   </div>
 
   <div class="answer pending-guidance-content">
-    {{ (item.answer or item.content) | markdown | safe }}
+    {{ item.answer | markdown | safe }}
 
-    {% if item.relatedFaqs and item.relatedFaqs.length > 0 %}
     <div class="related-faqs-inline">
       <ul>
         {% for faq in item.relatedFaqs %}
-        <li><a href="/faq/{{ faq.category }}/{{ faq.filename | replace('.md', '') }}/">{{ faq.question | markdown | safe | striptags }}</a></li>
+        <li><a href="{{ faq.url }}">{{ faq.question | markdown | safe | striptags }}</a></li>
         {% endfor %}
       </ul>
     </div>
-    {% endif %}
   </div>
 
-  {% if item.data["Related issue"] %}
+  {% if item.templateData.hasRelatedIssue %}
   <div class="related-issue">
-    <strong>Related issue:</strong> <a href="{{ item.data["Related issue"] }}">{{ item.data["Related issue"] }}</a>
+    <strong>Related issue:</strong> <a href="{{ item.templateData.relatedIssue }}">{{ item.templateData.relatedIssue }}</a>
   </div>
   {% endif %}
 
   <div class="edit-on-github">
     <span class="edit-icon">✏️</span>
-    <a href="https://github.com/orcwg/cra-hub/edit/main/faq/pending-guidance/{{ item.filename }}" target="_blank" rel="noopener">Edit this guidance request on GitHub</a>
+    <a href="{{ item.templateData.githubEditUrl }}" target="_blank" rel="noopener">Edit this guidance request on GitHub</a>
   </div>
 </div>
 

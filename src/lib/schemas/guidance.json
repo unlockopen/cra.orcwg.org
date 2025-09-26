@@ -1,0 +1,128 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://cra.orcwg.org/schemas/pending-guidance.json",
+  "title": "CRA Pending Guidance Item",
+  "description": "Schema for guidance request items that need clarification or development",
+  "type": "object",
+  "properties": {
+    "filename": {
+      "type": "string",
+      "description": "The markdown filename of this guidance request",
+      "pattern": "^[a-z0-9-]+\\.md$"
+    },
+    "data": {
+      "type": "object",
+      "description": "Frontmatter data from the markdown file",
+      "properties": {
+        "type": {
+          "type": "string",
+          "description": "Must be 'guidance-request' for pending guidance items",
+          "const": "guidance-request"
+        },
+        "status": {
+          "type": "string",
+          "description": "Current status of the guidance request"
+        },
+        "title": {
+          "type": "string",
+          "description": "Optional title override from frontmatter"
+        }
+      },
+      "required": ["type"],
+      "additionalProperties": true
+    },
+    "question": {
+      "type": ["string", "null"],
+      "description": "The main heading/question from the guidance request"
+    },
+    "answer": {
+      "type": ["string", "null"],
+      "description": "The full markdown content of the guidance request"
+    },
+    "content": {
+      "type": "string",
+      "description": "Raw markdown content of the file"
+    },
+    "status": {
+      "type": ["string", "null"],
+      "description": "Status from frontmatter (may duplicate data.status)"
+    },
+    "fullPath": {
+      "type": "string",
+      "description": "Full filesystem path to the guidance file"
+    },
+    "title": {
+      "type": "string",
+      "description": "Computed title for display (from frontmatter, content, or filename)"
+    },
+    "url": {
+      "type": "string",
+      "description": "The relative URL path to this guidance item on the website"
+    },
+    "relatedFaqs": {
+      "type": "array",
+      "description": "List of FAQ items that reference this guidance request",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "description": "FAQ category that references this guidance"
+          },
+          "filename": {
+            "type": "string",
+            "description": "FAQ filename that references this guidance"
+          },
+          "question": {
+            "type": "string",
+            "description": "Question text from the referencing FAQ"
+          },
+          "url": {
+            "type": "string",
+            "description": "URL to the referencing FAQ"
+          }
+        },
+        "required": ["category", "filename"],
+        "additionalProperties": false
+      }
+    },
+    "guidanceNeeded": {
+      "type": "string",
+      "description": "Extracted text from the 'Guidance needed' section, with markdown stripped"
+    },
+    "guidanceText": {
+      "type": "string",
+      "description": "Alias for guidanceNeeded for backward compatibility"
+    },
+    "url": {
+      "type": "string",
+      "description": "The relative URL path to this guidance item on the website",
+      "pattern": "^/pending-guidance/"
+    }
+  },
+  "required": ["filename", "content"],
+  "additionalProperties": true,
+  "examples": [
+    {
+      "filename": "legal-person-definition.md",
+      "data": {
+        "type": "guidance-request",
+        "status": "🛑 Pending Guidance"
+      },
+      "question": "Legal person definition clarification",
+      "answer": "## Guidance needed\n\nConfirmation that _legal persons_ do not include _natural persons_...",
+      "content": "---\ntype: guidance-request\nstatus: 🛑 Pending Guidance\n---\n\n# Legal person definition clarification...",
+      "status": "🛑 Pending Guidance",
+      "fullPath": "/path/to/_cache/faq/pending-guidance/legal-person-definition.md",
+      "title": "Legal person definition clarification",
+      "relatedFaqs": [
+        {
+          "category": "legislation",
+          "filename": "legal-person.md",
+          "question": "What is a _legal person_?"
+        }
+      ]
+    }
+  ]
+}
