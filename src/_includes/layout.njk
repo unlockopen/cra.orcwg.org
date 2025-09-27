@@ -47,6 +47,81 @@
             // Manually trigger Mermaid rendering
             mermaid.run();
         });
+
+        // Accordion functionality for FAQ lists
+        window.toggleAccordion = function(button) {
+            const item = button.parentElement;
+            const content = item.querySelector('.faq-content');
+            const icon = button.querySelector('.accordion-icon');
+
+            // Close other open accordions in the same category
+            const category = item.closest('.faq-category');
+            if (category) {
+                const otherItems = category.querySelectorAll('.faq-item.open');
+                otherItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('open');
+                        const otherContent = otherItem.querySelector('.faq-content');
+                        const otherIcon = otherItem.querySelector('.accordion-icon');
+                        otherContent.style.maxHeight = null;
+                        otherIcon.style.transform = 'rotate(0deg)';
+                    }
+                });
+            }
+
+            // Toggle current accordion
+            if (item.classList.contains('open')) {
+                item.classList.remove('open');
+                content.style.maxHeight = null;
+                icon.style.transform = 'rotate(0deg)';
+            } else {
+                item.classList.add('open');
+                content.style.maxHeight = content.scrollHeight + 'px';
+                icon.style.transform = 'rotate(180deg)';
+            }
+        };
+
+        // Admin mode toggle for accordion FAQs
+        window.toggleAccordionAdminMode = function() {
+            const adminIndicators = document.querySelectorAll('.admin-indicators');
+            const adminInfos = document.querySelectorAll('.faq-admin-info');
+            const button = document.querySelector('.admin-toggle');
+
+            const isHidden = adminIndicators[0]?.style.display === 'none' || adminIndicators[0]?.style.display === '';
+
+            adminIndicators.forEach(indicator => {
+                indicator.style.display = isHidden ? 'block' : 'none';
+            });
+
+            adminInfos.forEach(info => {
+                info.style.display = isHidden ? 'block' : 'none';
+            });
+
+            // Update max heights for open accordions to account for admin info visibility change
+            const openItems = document.querySelectorAll('.faq-item.open');
+            openItems.forEach(item => {
+                const content = item.querySelector('.faq-content');
+                content.style.maxHeight = content.scrollHeight + 'px';
+            });
+
+            if (isHidden) {
+                button.classList.add('active');
+                button.title = 'Hide admin information';
+            } else {
+                button.classList.remove('active');
+                button.title = 'Toggle admin information';
+            }
+        };
+
+        // Keyboard navigation for accordions
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+                if (e.target.classList.contains('faq-trigger')) {
+                    e.preventDefault();
+                    window.toggleAccordion(e.target);
+                }
+            }
+        });
     </script>
 </body>
 </html>

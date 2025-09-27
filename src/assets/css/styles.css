@@ -731,6 +731,152 @@ blockquote {
 }
 
 /* -------------------------------------------------------------------
+   GitHub-style Callouts
+   ------------------------------------------------------------------- */
+.callout {
+    margin: 20px 0;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid;
+    border-left: 4px solid;
+    position: relative;
+    font-size: 0.95em;
+    line-height: 1.5;
+}
+
+.callout-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    font-size: 0.9em;
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+}
+
+.callout-icon {
+    width: 16px;
+    height: 16px;
+    display: inline-block;
+    font-size: 14px;
+    text-align: center;
+    line-height: 16px;
+}
+
+.callout-content {
+    margin: 0;
+}
+
+.callout-content p:first-child {
+    margin-top: 0;
+}
+
+.callout-content p:last-child {
+    margin-bottom: 0;
+}
+
+/* NOTE callout - Blue */
+.callout--note {
+    background: #dbeafe;
+    border-color: #3b82f6;
+    border-left-color: #3b82f6;
+    color: #1e40af;
+}
+
+.callout--note .callout-header {
+    color: #1e40af;
+}
+
+.callout--note .callout-icon::before {
+    content: "ℹ️";
+}
+
+/* TIP callout - Green */
+.callout--tip {
+    background: #dcfce7;
+    border-color: #16a34a;
+    border-left-color: #16a34a;
+    color: #15803d;
+}
+
+.callout--tip .callout-header {
+    color: #15803d;
+}
+
+.callout--tip .callout-icon::before {
+    content: "💡";
+}
+
+/* IMPORTANT callout - Purple */
+.callout--important {
+    background: #f3e8ff;
+    border-color: #9333ea;
+    border-left-color: #9333ea;
+    color: #7c3aed;
+}
+
+.callout--important .callout-header {
+    color: #7c3aed;
+}
+
+.callout--important .callout-icon::before {
+    content: "❗";
+}
+
+/* WARNING callout - Orange */
+.callout--warning {
+    background: #fff7ed;
+    border-color: #ea580c;
+    border-left-color: #ea580c;
+    color: #c2410c;
+}
+
+.callout--warning .callout-header {
+    color: #c2410c;
+}
+
+.callout--warning .callout-icon::before {
+    content: "⚠️";
+}
+
+/* CAUTION callout - Red */
+.callout--caution {
+    background: #fef2f2;
+    border-color: #dc2626;
+    border-left-color: #dc2626;
+    color: #b91c1c;
+}
+
+.callout--caution .callout-header {
+    color: #b91c1c;
+}
+
+.callout--caution .callout-icon::before {
+    content: "🚨";
+}
+
+/* Mobile responsive adjustments for callouts */
+@media (max-width: 768px) {
+    .callout {
+        padding: 12px;
+        margin: 15px 0;
+    }
+
+    .callout-header {
+        font-size: 0.85em;
+        margin-bottom: 6px;
+    }
+
+    .callout-icon {
+        width: 14px;
+        height: 14px;
+        font-size: 12px;
+        line-height: 14px;
+    }
+}
+
+/* -------------------------------------------------------------------
    Mermaid Chart Styling
    ------------------------------------------------------------------- */
 .mermaid {
@@ -1374,4 +1520,360 @@ blockquote {
         grid-template-columns: 1fr;
         gap: 20px;
     }
+}
+
+/* -------------------------------------------------------------------
+   View Toggle
+   ------------------------------------------------------------------- */
+.view-toggle {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    margin: 20px 0;
+    padding: 15px;
+    background: var(--background-light);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+}
+
+.view-toggle-link {
+    padding: 8px 16px;
+    background: var(--primary-color);
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.view-toggle-link:hover {
+    background: var(--primary-dark);
+    transform: translateY(-1px);
+}
+
+.view-toggle-current {
+    padding: 8px 16px;
+    background: var(--background-white);
+    color: var(--text-primary);
+    border: 2px solid var(--primary-color);
+    border-radius: 6px;
+    font-size: 0.9em;
+    font-weight: 600;
+}
+
+/* -------------------------------------------------------------------
+   FAQ Component (List and Accordion modes)
+   ------------------------------------------------------------------- */
+
+/* FAQ Category container */
+.faq-category {
+    background: white;
+    border-radius: 8px;
+    box-shadow: var(--card-shadow);
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    margin-bottom: 30px;
+}
+
+/* FAQ Items container */
+.faq-items {
+    margin-top: 20px;
+}
+
+/* Individual FAQ Item */
+.faq-item {
+    margin-bottom: 8px;
+    background: white;
+    transition: all 0.2s ease;
+}
+
+/* List mode styling */
+.faq-category--list .faq-item {
+    padding: 0;
+}
+
+.faq-category--list .faq-trigger {
+    display: flex;
+    align-items: center;
+    padding: 15px 20px;
+    background: var(--background-light);
+    border-radius: 6px;
+    color: var(--text-color);
+    text-decoration: none;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    font-weight: 500;
+    font-size: 0.95em;
+    min-height: 60px;
+    width: 100%;
+}
+
+.faq-category--list .faq-trigger:hover {
+    background: white;
+    border-color: var(--primary-color);
+    box-shadow: 0 4px 15px rgba(28, 177, 209, 0.1);
+    transform: translateY(-1px);
+    color: var(--secondary-color);
+}
+
+.faq-category--list .faq-trigger::after {
+    content: '→';
+    margin-left: auto;
+    font-weight: bold;
+    color: var(--primary-color);
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.2s ease;
+}
+
+.faq-category--list .faq-trigger:hover::after {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Accordion mode styling */
+.faq-category--accordion .faq-item {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+}
+
+.faq-category--accordion .faq-item:hover {
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.faq-category--accordion .faq-item.open {
+    border-color: var(--primary-color);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.1);
+}
+
+.faq-category--accordion .faq-trigger {
+    width: 100%;
+    padding: 18px 20px;
+    background: none;
+    border: none;
+    text-align: left;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+    font-size: 1em;
+    line-height: 1.4;
+    transition: all 0.2s ease;
+}
+
+.faq-category--accordion .faq-trigger:hover {
+    background: rgba(28, 177, 209, 0.03);
+}
+
+.faq-category--accordion .faq-item.open .faq-trigger {
+    background: rgba(28, 177, 209, 0.05);
+    border-bottom: 1px solid var(--border-color);
+}
+
+/* Question text styling */
+.faq-trigger .question-text {
+    flex: 1;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.faq-trigger .question-text p {
+    margin: 0;
+    display: inline;
+}
+
+.faq-trigger .question-text em {
+    font-style: italic;
+    font-weight: 600;
+}
+
+/* Accordion icon */
+.accordion-icon {
+    flex-shrink: 0;
+    color: var(--primary-color);
+    font-size: 0.8em;
+    font-weight: bold;
+    transition: transform 0.3s ease;
+    margin-top: 2px;
+}
+
+/* FAQ Content (accordion only) */
+.faq-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+
+.faq-item.open .faq-content {
+    border-top: 1px solid var(--border-color);
+}
+
+/* FAQ Answer */
+.faq-answer {
+    padding: 20px;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.faq-answer p:first-child {
+    margin-top: 0;
+}
+
+.faq-answer p:last-child {
+    margin-bottom: 0;
+}
+
+/* FAQ Admin Info */
+.faq-admin-info {
+    padding: 15px 20px;
+    background: var(--background-light);
+    border-top: 1px solid var(--border-color);
+}
+
+.faq-admin-info .edit-on-github,
+.faq-admin-info .related-issue,
+.faq-admin-info .pending-guidance-link,
+.faq-admin-info .faq-link {
+    margin-bottom: 10px;
+}
+
+.faq-admin-info .faq-link:last-child {
+    margin-bottom: 0;
+}
+
+.standalone-link {
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9em;
+}
+
+.standalone-link:hover {
+    text-decoration: underline;
+}
+
+/* Admin indicators */
+.faq-trigger .admin-indicators {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-left: 10px;
+}
+
+/* Keyboard focus styles */
+.faq-category--accordion .faq-trigger:focus {
+    outline: 2px solid var(--primary-color);
+    outline-offset: 2px;
+}
+
+/* Mobile responsive adjustments */
+@media (max-width: 768px) {
+    .faq-category--accordion .faq-trigger {
+        padding: 15px;
+        gap: 10px;
+    }
+
+    .faq-answer {
+        padding: 15px;
+    }
+
+    .faq-admin-info {
+        padding: 12px 15px;
+    }
+
+    .faq-category--list .faq-trigger {
+        padding: 10px 12px;
+        font-size: 0.9em;
+    }
+}
+
+/* GitHub-style Callouts/Alerts */
+.markdown-alert {
+    margin: 20px 0;
+    padding: 16px;
+    border-radius: 8px;
+    border: 1px solid;
+    border-left: 4px solid;
+    background: #ffffff;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.markdown-alert-title {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    margin: 0 0 8px 0;
+    color: inherit;
+}
+
+.markdown-alert-title svg {
+    margin-right: 8px;
+    fill: currentColor;
+}
+
+.markdown-alert p:last-child {
+    margin-bottom: 0;
+}
+
+/* Note - Blue */
+.markdown-alert-note {
+    background: #dbeafe;
+    border-color: #3b82f6;
+    border-left-color: #3b82f6;
+    color: #1e40af;
+}
+
+.markdown-alert-note .markdown-alert-title {
+    color: #1e40af;
+}
+
+/* Tip - Green */
+.markdown-alert-tip {
+    background: #d1fae5;
+    border-color: #10b981;
+    border-left-color: #10b981;
+    color: #065f46;
+}
+
+.markdown-alert-tip .markdown-alert-title {
+    color: #065f46;
+}
+
+/* Important - Purple */
+.markdown-alert-important {
+    background: #ede9fe;
+    border-color: #8b5cf6;
+    border-left-color: #8b5cf6;
+    color: #5b21b6;
+}
+
+.markdown-alert-important .markdown-alert-title {
+    color: #5b21b6;
+}
+
+/* Warning - Orange */
+.markdown-alert-warning {
+    background: #fff7ed;
+    border-color: #ea580c;
+    border-left-color: #ea580c;
+    color: #c2410c;
+}
+
+.markdown-alert-warning .markdown-alert-title {
+    color: #c2410c;
+}
+
+/* Caution - Red */
+.markdown-alert-caution {
+    background: #fef2f2;
+    border-color: #ef4444;
+    border-left-color: #ef4444;
+    color: #dc2626;
+}
+
+.markdown-alert-caution .markdown-alert-title {
+    color: #dc2626;
 }

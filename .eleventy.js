@@ -2,10 +2,17 @@ module.exports = function (eleventyConfig) {
   // Copy asset files to output
   eleventyConfig.addPassthroughCopy("src/assets");
 
-  // Add markdown filter
+  // Add markdown filter with GitHub alerts plugin
   eleventyConfig.addFilter("markdown", function (content) {
+    if (!content) return "";
+
     const markdownIt = require("markdown-it")();
-    return markdownIt.render(content || "");
+    const markdownItGitHubAlerts = require("markdown-it-github-alerts");
+
+    // Use the plugin directly
+    markdownIt.use(markdownItGitHubAlerts.default);
+
+    return markdownIt.render(content);
   });
 
   // Add category title filter with CRA normalization
