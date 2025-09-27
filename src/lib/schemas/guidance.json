@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://cra.orcwg.org/schemas/pending-guidance.json",
+  "title": "CRA Pending Guidance Item",
+  "description": "Schema for guidance request items that need clarification or development",
+  "type": "object",
+  "properties": {
+    "rawMarkdown": {
+      "type": "string",
+      "description": "Raw markdown content of the file"
+    },
+    "filename": {
+      "type": "string",
+      "description": "Base filename of the guidance document"
+    },
+    "category": {
+      "type": "string",
+      "description": "Category directory path"
+    },
+    "contentType": {
+      "type": "string",
+      "description": "Content type identifier",
+      "const": "guidance"
+    },
+    "status": {
+      "type": ["string", "null"],
+      "description": "Current status of the guidance request",
+      "enum": ["pending-guidance", null]
+    },
+    "summary": {
+      "type": "string",
+      "description": "Extracted text from the 'Guidance needed' section - the core guidance request"
+    },
+    "title": {
+      "type": "string",
+      "description": "Computed title for display (from frontmatter, content, or filename)"
+    },
+    "type": {
+      "type": "string",
+      "description": "Must be 'guidance-request' for pending guidance items",
+      "const": "guidance-request"
+    },
+    "url": {
+      "type": "string",
+      "description": "The relative URL path to this guidance item on the website",
+      "pattern": "^/pending-guidance/"
+    }
+  },
+  "required": ["rawMarkdown", "filename", "category", "contentType", "type", "url", "title", "summary"],
+  "additionalProperties": true,
+  "examples": [
+    {
+      "type": "guidance-request",
+      "status": "🛑 Pending Guidance",
+      "title": "Legal person definition clarification",
+      "summary": "Confirmation that _legal persons_ do not include _natural persons_ in the context of the CRA",
+      "rawMarkdown": "# Legal person definition clarification\n\n## Guidance needed\n\nConfirmation that _legal persons_ do not include _natural persons_ in the context of the CRA...",
+      "filename": "legal-person-definition.md",
+      "category": "root",
+      "contentType": "guidance",
+      "url": "/pending-guidance/legal-person-definition/"
+    }
+  ]
+}

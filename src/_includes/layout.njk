@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{ site.title }} - {% if title %}{{ title | striptags }}{% endif %}</title>
     <link rel="stylesheet" href="/assets/css/styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/mermaid@10.6.1/dist/mermaid.min.js"></script>
+    <script src="/assets/js/mermaid.min.js"></script>
 </head>
 <body>
     <main>
@@ -15,7 +15,9 @@
             </div>
             <nav class="header-navigation">
                 <a href="/faq-list/" class="header-nav-link{% if page.url == '/faq-list/' or page.url.startsWith('/faq/') %} active{% endif %}">All FAQs</a>
+                {% if orcwgImport.list and orcwgImport.list.length > 0 %}
                 <a href="/lists/" class="header-nav-link{% if page.url == '/lists/' or page.url.startsWith('/lists/') %} active{% endif %}">Curated Lists</a>
+                {% endif %}
                 <a href="/pending-guidance/" class="header-nav-link{% if page.url == '/pending-guidance/' or page.url.startsWith('/pending-guidance/') %} active{% endif %}">Pending Guidance</a>
             </nav>
             <img src="/assets/images/orcwg_orc.png" alt="Open Regulatory Compliance Working Group Orc mascott" class="header-logo">

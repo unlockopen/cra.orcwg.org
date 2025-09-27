@@ -1,12 +1,13 @@
 ---
 layout: layout.njk
 pagination:
-  data: pendingGuidance
+  data: orcwgImport.guidance
   size: 1
   alias: item
-permalink: "/pending-guidance/{{ item.filename | replace('.md', '') }}/"
+  resolve: values
+permalink: "{{ item.url }}"
 eleventyComputed:
-  title: "{{ item.title or 'Pending Guidance' }}"
+  title: "Guidance request : {{ item.title }}"
 ---
 
 <div class="pending-guidance-page">
@@ -14,25 +15,20 @@ eleventyComputed:
     <h2>🛑 Pending Guidance</h2>
   </div>
 
-  <div class="answer pending-guidance-content">
-    {{ (item.answer or item.content) | markdown | safe }}
+  <div class="pending-guidance-content">
+    {{ item.rawMarkdown | markdown | safe }}
 
-    {% if item.relatedFaqs and item.relatedFaqs.length > 0 %}
     <div class="related-faqs-inline">
       <ul>
-        {% for faq in item.relatedFaqs %}
-        <li><a href="/faq/{{ faq.category }}/{{ faq.filename | replace('.md', '') }}/">{{ faq.question | markdown | safe | striptags }}</a></li>
+        {% set guidanceKey = item.filename | replace('.md', '') %}
+        {% set relatedFaqKeys = orcwgImport.crossReferences.faqGuidanceLinks[guidanceKey] %}
+        {% for faqKey in relatedFaqKeys %}
+          {% set faq = orcwgImport.faq[faqKey] %}
+          <li><a href="{{ faq.url }}">{{ faq.question | markdown | safe | striptags }}</a></li>
         {% endfor %}
       </ul>
     </div>
-    {% endif %}
   </div>
-
-  {% if item.data["Related issue"] %}
-  <div class="related-issue">
-    <strong>Related issue:</strong> <a href="{{ item.data["Related issue"] }}">{{ item.data["Related issue"] }}</a>
-  </div>
-  {% endif %}
 
   <div class="edit-on-github">
     <span class="edit-icon">✏️</span>

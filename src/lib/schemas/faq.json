@@ -1,0 +1,68 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://cra.orcwg.org/schemas/faq.json",
+  "title": "CRA FAQ Item",
+  "description": "Schema for individual FAQ items in the CRA FAQ system",
+  "type": "object",
+  "properties": {
+    "Related issue": {
+      "type": "string",
+      "description": "URL to the GitHub issue related to this FAQ",
+      "format": "uri",
+      "pattern": "^https://github\\.com/"
+    },
+    "status": {
+      "type": ["string", "null"],
+      "description": "Publication status of the FAQ",
+      "enum": ["approved", "draft", "pending-guidance", null]
+    },
+    "answer": {
+      "type": "string",
+      "description": "The markdown content answering the question"
+    },
+    "category": {
+      "type": "string",
+      "description": "The category directory this FAQ belongs to"
+    },
+    "guidance-id": {
+      "type": "string",
+      "description": "Reference to guidance request identifier (alternative field name)"
+    },
+    "question": {
+      "type": "string",
+      "description": "The main question being answered by this FAQ"
+    },
+    "type": {
+      "type": "string",
+      "description": "Content type - must not be guidance-request for FAQ items",
+      "not": {
+        "const": "guidance-request"
+      }
+    },
+    "url": {
+      "type": "string",
+      "description": "The relative URL path to this FAQ on the website",
+      "pattern": "^/faq/"
+    }
+  },
+  "required": ["status", "question", "answer", "category", "url"],
+  "additionalProperties": true,
+  "examples": [
+    {
+      "status": "approved",
+      "Related issue": "https://github.com/orcwg/cra-hub/issues/154",
+      "question": "What is the Cyber Resilience Act (CRA)?",
+      "answer": "The Cyber Resilience Act (CRA) is a new EU Regulation...",
+      "category": "cra-itself",
+      "url": "/faq/cra-itself/cra/"
+    },
+    {
+      "status": "draft",
+      "Related issue": "https://github.com/orcwg/cra-hub/issues/72",
+      "question": "What is a _security attestation_ in the CRA?",
+      "answer": "Security attestations in the CRA are an optional extension...",
+      "category": "attestations",
+      "url": "/faq/attestations/what-is-a-security-attestation/"
+    }
+  ]
+}

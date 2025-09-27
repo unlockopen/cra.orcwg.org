@@ -1,0 +1,51 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://cra.orcwg.org/schemas/list.json",
+  "title": "CRA Curated List Item",
+  "description": "Schema for processed curated list items in the CRA system",
+  "type": "object",
+  "properties": {
+    "category": {
+      "type": "string",
+      "description": "The category/directory this list belongs to (usually 'root' for lists)"
+    },
+    "description": {
+      "type": "string",
+      "description": "Brief description of what this list covers"
+    },
+    "faqs": {
+      "type": "array",
+      "description": "Array of FAQ keys (category/filename) included in this curated list",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^[a-z0-9-]+/[a-z0-9-]+$",
+        "description": "FAQ key in format 'category/filename'"
+      }
+    },
+    "order": {
+      "type": "integer",
+      "description": "Display order (lower numbers appear first)",
+      "minimum": 1
+    },
+    "title": {
+      "type": "string",
+      "description": "Display name for the curated list"
+    }
+  },
+  "required": ["title", "description", "faqs"],
+  "additionalProperties": true,
+  "examples": [
+    {
+      "title": "Getting Started with CRA",
+      "description": "Essential FAQs for understanding the basics of the Cyber Resilience Act",
+      "order": 1,
+      "category": "root",
+      "faqs": [
+        "cra-itself/cra",
+        "cra-itself/scope",
+        "cra-itself/ce-mark"
+      ]
+    }
+  ]
+}
