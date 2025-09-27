@@ -3,11 +3,11 @@ layout: layout.njk
 pagination:
   data: orcwgImport.guidance
   size: 1
-  alias: item
+  alias: guidance
   resolve: values
-permalink: "{{ item.url }}"
+permalink: "{{ guidance.url }}"
 eleventyComputed:
-  title: "Guidance request : {{ item.title }}"
+  title: "Guidance request : {{ guidance.title }}"
 ---
 
 <div class="pending-guidance-page">
@@ -16,11 +16,11 @@ eleventyComputed:
   </div>
 
   <div class="pending-guidance-content">
-    {{ item.rawMarkdown | markdown | safe }}
+    {{ guidance.rawMarkdown | markdown | safe }}
 
     <div class="related-faqs-inline">
       <ul>
-        {% set guidanceKey = item.filename | replace('.md', '') %}
+        {% set guidanceKey = guidance.filename | replace('.md', '') %}
         {% set relatedFaqKeys = orcwgImport.crossReferences.faqGuidanceLinks[guidanceKey] %}
         {% for faqKey in relatedFaqKeys %}
           {% set faq = orcwgImport.faq[faqKey] %}

@@ -12,11 +12,11 @@ permalink: "/pending-guidance/"
   <section class="category-section">
     <h2 class="category-title">Pending Guidance</h2>
     <ul class="question-list">
-      {% for key, item in orcwgImport.guidance %}
+      {% for key, guidance in orcwgImport.guidance %}
         <li class="question-item">
-          <a href="{{ item.url }}" class="question-link">
+          <a href="{{ guidance.url }}" class="question-link">
             <span class="question-text">
-              {{ item.title }}
+              {{ guidance.title }}
             </span>
           </a>
         </li>

@@ -1,0 +1,59 @@
+{#
+  Reusable FAQ List Component
+
+  Parameters (set via componentData variable):
+  - title: Section title to display
+  - faqs: Array of FAQ objects or FAQ keys
+  - showAdminIndicators: Optional boolean to show admin indicators (default: false)
+  - categoryClass: Optional CSS class for styling variations
+
+  Usage Examples:
+
+  1. Basic usage with FAQ keys:
+  {% set componentData = {
+    title: "Getting Started",
+    faqs: ["faq/basics/intro", "faq/basics/setup"]
+  } %}
+  {% include "components/faq-list.njk" %}
+
+  2. Usage with FAQ objects:
+  {% set componentData = {
+    title: "Advanced Topics",
+    faqs: faqObjects,
+    showAdminIndicators: true
+  } %}
+  {% include "components/faq-list.njk" %}
+
+  3. Usage with custom styling:
+  {% set componentData = {
+    title: "Special Category",
+    faqs: specialFaqs,
+    categoryClass: "special-category"
+  } %}
+  {% include "components/faq-list.njk" %}
+#}
+
+<section class="category-section{{ ' ' + componentData.categoryClass if componentData.categoryClass }}">
+  <h2 class="category-title">{{ componentData.title }}</h2>
+  <ul class="question-list">
+    {% for faq in componentData.faqs %}
+      {# Handle both FAQ objects and FAQ keys #}
+      {% if faq.url %}
+        {% set faqObj = faq %}
+      {% else %}
+        {% set faqObj = orcwgImport.faq[faq] %}
+      {% endif %}
+
+      <li class="question-item">
+        <a href="{{ faqObj.url }}" class="question-link">
+          <span class="question-text">
+            {{ faqObj.question | markdown | safe }}
+            <div class="admin-indicators" style="display: {{ 'block' if componentData.showAdminIndicators else 'none' }};">
+              <span class="status-indicator status-{{ faqObj.status }}"></span>
+            </div>
+          </span>
+        </a>
+      </li>
+    {% endfor %}
+  </ul>
+</section>

@@ -3,32 +3,23 @@ layout: layout.njk
 pagination:
   data: orcwgImport.list
   size: 1
-  alias: listData
+  alias: list
   addAllPagesToCollections: true
-permalink: "{{ listData.url }}"
+permalink: "{{ list.url }}"
 eleventyComputed:
-  title: "{{ listData.title }}"
+  title: "{{ list.title }}"
 ---
 
 <div class="curated-list-description">
-  <p>{{ listData.description }}</p>
+  <p>{{ list.description }}</p>
 </div>
 
 <div class="faq-index">
-  <section class="category-section">
-    <h2 class="category-title">{{ listData.title }}</h2>
-    <ul class="question-list">
-      {% for faqKey in listData.faqs %}
-        {% set item = orcwgImport.faq[faqKey] %}
-        <li class="question-item">
-          <a href="{{ item.url }}" class="question-link">
-            <span class="question-text">
-              {{ item.question | markdown | safe }}
-            </span>
-          </a>
-        </li>
-      {% endfor %}
-    </ul>
-  </section>
+  {% set componentData = {
+    title: list.title,
+    faqs: list.faqs,
+    showAdminIndicators: false
+  } %}
+  {% include "components/faq-list.njk" %}
 </div>
 

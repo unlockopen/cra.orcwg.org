@@ -6,33 +6,17 @@ permalink: "/faq-list/"
 
 <div class="faq-list-intro">
   <p>Complete collection of all FAQ topics organized by category. This includes questions and answers covering all aspects of the Cyber Resilience Act, from basic concepts to detailed implementation guidance.</p>
-  {% if orcwgImport.list and orcwgImport.list.length > 0 %}
-  <p><strong>Note:</strong> This list includes all FAQs regardless of completion status. Some entries may be drafts, have missing content, or require additional guidance. For curated collections of complete FAQs, visit the <a href="/lists/">Curated Lists</a> section.</p>
-  {% else %}
   <p><strong>Note:</strong> This list includes all FAQs regardless of completion status. Some entries may be drafts, have missing content, or require additional guidance.</p>
-  {% endif %}
 </div>
 
 <div class="faq-index">
-  {% for category, faqKeys in orcwgImport.categories %}
-      <section class="category-section">
-        <h2 class="category-title">{{ category | categoryTitle }}</h2>
-        <ul class="question-list">
-          {% for faqKey in faqKeys %}
-            {% set question = orcwgImport.faq[faqKey] %}
-            <li class="question-item">
-              <a href="{{ question.url }}" class="question-link">
-                <span class="question-text">
-                    {{ question.question | markdown | safe }}
-                  <div class="admin-indicators" style="display: none;">
-                      <span class="status-indicator status-{{ question.status }}"></span>
-                  </div>
-                </span>
-              </a>
-            </li>
-          {% endfor %}
-        </ul>
-      </section>
+  {% for category, faqs in orcwgImport.categories %}
+    {% set componentData = {
+      title: category | categoryTitle,
+      faqs: faqs,
+      showAdminIndicators: false
+    } %}
+    {% include "components/faq-list.njk" %}
   {% endfor %}
 </div>
 
