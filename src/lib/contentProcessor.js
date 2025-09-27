@@ -167,7 +167,7 @@ const parseBaseMarkdown = (fileContent, filename, category, contentType = 'faq')
 const normalizeStatus = (item) => {
   let status = item.Status || item.status;
 
-  if (item['pending-guidance'] || item['guidance-id']) {
+  if (item['guidance-id']) {
     status = 'pending-guidance';
   } else if (status) {
     status = status.replace(/🛑\s*/, '').replace(/⚠️\s*/, '').trim();
@@ -241,7 +241,7 @@ const partitionByValidation = (items, validator, schemaType, context) => {
  */
 const enrichFaqsWithGuidance = (faqItems, guidanceItems) => {
   return faqItems.map(faq => {
-    const guidanceKey = faq['pending-guidance'] || faq['guidance-id'];
+    const guidanceKey = faq['guidance-id'];
 
     if (guidanceKey) {
       const relatedGuidance = guidanceItems.find(g =>
@@ -295,7 +295,7 @@ const findRelatedFaqs = (guidance, faqItems) => {
 
   return faqItems
     .filter(faq => {
-      const faqGuidanceKey = faq['pending-guidance'] || faq['guidance-id'];
+      const faqGuidanceKey = faq['guidance-id'];
       return faqGuidanceKey === guidanceKey;
     })
     .map(faq => ({

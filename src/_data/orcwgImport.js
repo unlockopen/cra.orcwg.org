@@ -1,6 +1,7 @@
 const path = require("path");
 const { createContentProcessor } = require("../lib/contentProcessor");
 const {
+  CONTENT_TYPES,
   CONTENT_TYPE_NAMES,
   getSourceDirectory,
   createParserRegistry
@@ -224,7 +225,7 @@ module.exports = function () {
   console.log(`📋 Processing configured content types: ${CONTENT_TYPE_NAMES.join(', ')}`);
 
   // Create parser registry from configuration
-  const parserRegistry = createParserRegistry();
+  const parserRegistry = createParserRegistry(require, CONTENT_TYPES);
 
   const processor = createContentProcessor({ parserRegistry });
 

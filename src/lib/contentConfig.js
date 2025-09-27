@@ -54,14 +54,22 @@ function getSourceDirectory(typeName, projectRoot) {
 
 /**
  * Create parser registry from configuration
- * @param {Function} moduleLoader - Module loader function (for testing)
+ * @param {Function} moduleLoader - Module loader function (required)
+ * @param {Object} contentTypes - Content type configurations (required)
  * @returns {Object} Parser registry with all configured parsers
  */
-function createParserRegistry(moduleLoader = require) {
+function createParserRegistry(moduleLoader, contentTypes) {
+  if (!moduleLoader) {
+    throw new Error('moduleLoader parameter is required');
+  }
+  if (!contentTypes) {
+    throw new Error('contentTypes parameter is required');
+  }
+
   const registry = {};
 
-  for (const typeName of CONTENT_TYPE_NAMES) {
-    const config = CONTENT_TYPES[typeName];
+  for (const typeName of Object.keys(contentTypes)) {
+    const config = contentTypes[typeName];
     if (!config) continue;
 
     try {

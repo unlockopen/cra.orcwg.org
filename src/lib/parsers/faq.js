@@ -66,7 +66,7 @@ function enhanceFaqItem(baseItem) {
 function postProcessFaq(faqItems, allParsedData) {
     // Return clean FAQs with minimal computed fields
     return faqItems.map(faq => {
-        const guidanceKey = faq['pending-guidance'] || faq['guidance-id'];
+        const guidanceKey = faq['guidance-id'];
 
         return {
             ...faq,
