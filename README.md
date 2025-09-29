@@ -10,7 +10,7 @@ Eleventy-based static site generator that creates a FAQ website for ORC WG's CRA
 
 ### Installation
 ```bash
-git clone https://github.com/ninnlangel/cra.orcwg.org.git
+git clone https://github.com/orcwg/cra.orcwg.org.git
 cd cra.orcwg.org
 npm install
 ```
@@ -34,7 +34,7 @@ This is an Eleventy site that acts as a content processor and renderer for exter
 5. **Site Generation** - Final site is output to `_site/` for deployment
 
 ### FAQ Processing
-- FAQ content comes from markdown files in the external `orcwg/cra-hub` repository
+- FAQ content comes from markdown files in the external `orcwg/cra-faq` repository
 - Content is organized by directory structure and processed by `src/_data/faq.js`
 - Questions are extracted from markdown `#` headings
 - Answers are content following the first heading
