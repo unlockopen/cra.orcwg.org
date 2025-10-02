@@ -1,7 +1,7 @@
 const fs = require("fs");
 const path = require("path");
 const yaml = require("js-yaml");
-const faq = require('./faq.js');
+const data = require('./data.js');
 
 const LISTS_DIR = path.join(__dirname, "..", "_lists");
 
@@ -39,7 +39,7 @@ function isCompleteItem(item) {
 }
 
 module.exports = function () {
-  const faqData = faq();
+  const faqData = data().faqsByCategory;
   const curatedListsConfig = loadCuratedListsFromYAML();
   const result = [];
 
@@ -79,7 +79,7 @@ module.exports = function () {
           listItems.push({
             ...faqItem,
             category: category,
-            url: `/faq/${category}/${filename.replace('.md', '')}/`
+            url: faqItem.permalink
           });
         }
       }

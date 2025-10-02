@@ -10,13 +10,13 @@ permalink: "/faq-list/"
 </div>
 
 <div class="faq-index">
-  {% for category, questions in faq %}
+  {% for category, questions in data.faqsByCategory %}
     <section class="category-section">
       <h2 class="category-title">{{ category | categoryTitle }}</h2>
       <ul class="question-list">
         {% for question in questions %}
           <li class="question-item">
-            <a href="/faq/{{ category }}/{{ question.filename | replace('.md', '') }}/" class="question-link">
+            <a href="{{ question.permalink }}" class="question-link">
               <span class="question-text">
                 {% if question.question %}
                   {{ question.question | markdown | safe }}
@@ -25,18 +25,14 @@ permalink: "/faq-list/"
                   <span class="content-note">⚠️ Missing question</span>
                 {% endif %}
                 <div class="admin-indicators" style="display: none;">
-                  {% if question.Status %}
-                    {% if "draft" in question.Status %}
-                      <span class="status-indicator status-draft">⚠️ Draft</span>
-                    {% elif "pending-guidance" in question.Status %}
-                      <span class="status-indicator status-pending-guidance">🛑 Pending Guidance</span>
-                    {% elif "approved" in question.Status %}
-                      <span class="status-indicator status-approved">✅ Approved</span>
-                    {% else %}
-                      <span class="status-indicator">{{ question.Status }}</span>
-                    {% endif %}
+                  {% if question.status == "draft" %}
+                    <span class="status-indicator status-draft">⚠️ Draft</span>
+                  {% elif question.status == "pending guidance" %}
+                    <span class="status-indicator status-pending-guidance">🛑 Pending Guidance</span>
+                  {% elif question.status == "approved" %}
+                    <span class="status-indicator status-approved">✅ Approved</span>
                   {% endif %}
-                  {% if not question.answer or question.answer | length == 0 %}
+                  {% if not question.hasAnswer %}
                     <span class="missing-answer-indicator">⚠️ Missing answer</span>
                   {% endif %}
                 </div>

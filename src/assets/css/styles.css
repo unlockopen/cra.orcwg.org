@@ -386,6 +386,29 @@ h3 {
     color: #c62828;
 }
 
+.pending-guidance-callout {
+    margin: 20px 0;
+    background: #fff3e0;
+    border: 1px solid #ffcc02;
+    border-left: 4px solid #ff9800;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.pending-guidance-callout p {
+    margin: 0 0 12px 0;
+    color: var(--secondary-color);
+    line-height: 1.5;
+}
+
+.pending-guidance-callout p:last-child {
+    margin-bottom: 0;
+}
+
+.pending-guidance-callout strong {
+    color: #c62828;
+}
+
 .guidance-content {
     margin-bottom: 15px;
 }
