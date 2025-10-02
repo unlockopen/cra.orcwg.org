@@ -10,7 +10,7 @@ Eleventy-based static site generator that creates a FAQ website for ORC WG's CRA
 
 ### Installation
 ```bash
-git clone https://github.com/ninnlangel/cra.orcwg.org.git
+git clone https://github.com/orcwg/cra.orcwg.org.git
 cd cra.orcwg.org
 npm install
 ```
@@ -40,6 +40,12 @@ This is an Eleventy site that acts as a content processor and renderer for exter
 ### Content Types
 - **FAQs**: Questions and answers with status tracking (`draft`, `approved`, `pending guidance`)
 - **Guidance Requests**: Items awaiting EU Commission clarification
+### FAQ Processing
+- FAQ content comes from markdown files in the external `orcwg/cra-faq` repository
+- Content is organized by directory structure and processed by `src/_data/faq.js`
+- Questions are extracted from markdown `#` headings
+- Answers are content following the first heading
+- Status tracking: `draft`, `approved`, `pending-guidance`
 
 ### Curated Lists
 - YAML files in `src/_lists/` define curated FAQ collections
