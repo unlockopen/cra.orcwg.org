@@ -74,8 +74,8 @@ This is an Eleventy site that acts as a content processor and renderer for exter
 
 The site is designed to be deployed as a static site. The build process:
 
-1. Updates external content cache
-2. Processes FAQ data from cached repository
+1. Clones `cra-hub` repository using Git
+2. Processes FAQ data from cloned repository
 3. Generates static HTML pages
 4. Outputs complete site to `_site/` directory
 
