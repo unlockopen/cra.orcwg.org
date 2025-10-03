@@ -41,7 +41,7 @@ This is an Eleventy site that acts as a content processor and renderer for exter
 - **FAQs**: Questions and answers with status tracking (`draft`, `approved`, `pending guidance`)
 - **Guidance Requests**: Items awaiting EU Commission clarification
 ### FAQ Processing
-- FAQ content comes from markdown files in the external `orcwg/cra-faq` repository
+- FAQ content comes from markdown files in the external `orcwg/cra-hub` repository
 - Content is organized by directory structure and processed by `src/_data/faq.js`
 - Questions are extracted from markdown `#` headings
 - Answers are content following the first heading
@@ -60,7 +60,7 @@ This is an Eleventy site that acts as a content processor and renderer for exter
 ## External Dependencies
 
 ### Primary Content Source
-- **Repository**: [`orcwg/cra-faq`](https://github.com/orcwg/cra-faq)
+- **Repository**: [`orcwg/cra-hub`](https://github.com/orcwg/cra-hub)
 - **Purpose**: Contains all FAQ content and guidance requests in markdown format
 - **Update**: Automatically pulled during builds via `update-cache.sh`
 
