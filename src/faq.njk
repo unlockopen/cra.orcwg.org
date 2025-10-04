@@ -16,35 +16,35 @@ eleventyComputed:
 
   <div class="faq-answer">
     {{ item.answer | markdown | safe }}
-  </div>
-</article>
 
-{% if item.status == "draft" or item.guidanceItem %}
-<aside class="faq-warnings">
-  {% if item.status == "draft" %}
-  <div class="faq-warning">
-    <p><strong>⚠️ This FAQ is a draft</strong> - it hasn't been reviewed by the FAQ Task Force. The answer may be incomplete or incorrect.</p>
-  </div>
-  {% endif %}
+    {% if item.status == "draft" or item.guidanceItem %}
+    <aside class="faq-warnings">
+      {% if item.status == "draft" %}
+      <div class="faq-warning">
+        <p><strong>This FAQ is a draft</strong> - it hasn't been reviewed by the FAQ Task Force. The answer may be incomplete or incorrect.</p>
+      </div>
+      {% endif %}
 
-  {% if item.guidanceItem %}
-  <div class="faq-warning">
-    <p><strong>🛑 Pending Guidance</strong></p>
-    {% if item.guidanceItem.guidanceText %}
-      <div class="guidance-content">
-        <p>This FAQ awaits commission guidance on:</p>
-        <p class="guidance-phrase">{{ item.guidanceItem.guidanceText | truncate(300) }}</p>
+      {% if item.guidanceItem %}
+      <div class="faq-warning faq-guidance">
+        <p><strong>Pending Guidance</strong></p>
+        {% if item.guidanceItem.guidanceText %}
+          <div class="guidance-content">
+            <p>This FAQ awaits commission guidance on:</p>
+            <p class="guidance-phrase">{{ item.guidanceItem.guidanceText | truncate(300) }}</p>
+          </div>
+          <div class="guidance-actions">
+            <a href="{{ item.guidanceItem.permalink }}" class="guidance-link">View full guidance request →</a>
+          </div>
+        {% else %}
+          <p>This FAQ awaits commission guidance.</p>
+        {% endif %}
       </div>
-      <div class="guidance-actions">
-        <a href="{{ item.guidanceItem.permalink }}" class="guidance-link">View full guidance request →</a>
-      </div>
-    {% else %}
-      <p>This FAQ awaits commission guidance.</p>
+      {% endif %}
+    </aside>
     {% endif %}
   </div>
-  {% endif %}
-</aside>
-{% endif %}
+</article>
 
 <button class="admin-toggle" onclick="toggleAdminMode()" title="Toggle admin information">
   ✏️
@@ -53,7 +53,7 @@ eleventyComputed:
 <div class="admin-info" style="display: none;">
   {% if item["guidance-id"] %}
   <div class="pending-guidance-link">
-    <strong>🛑 Related Pending Guidance:</strong> <a href="{{ item.guidanceItem.permalink }}">{{ item["guidance-id"] | replace('-', ' ') | title }}</a>
+    <strong>Related Pending Guidance:</strong> <a href="{{ item.guidanceItem.permalink }}">{{ item["guidance-id"] | replace('-', ' ') | title }}</a>
     <p><em>This FAQ is affected by pending guidance that is currently being developed.</em></p>
   </div>
   {% endif %}
