@@ -8,7 +8,9 @@
    ------------------------------------------------------------------- */
 :root {
     --primary-color: #1cb1d1;
-    --secondary-color: #2c3e50;
+    --primary-dark: #006472;
+    --secondary-color: #003963;
+    --secondary-orange: #ff6b35;
     --text-color: #333;
     --text-light: #666;
     --background-light: #f8f9fa;
@@ -249,7 +251,8 @@ h3 {
 .faq-main-content {
     background: white;
     border: 1px solid var(--border-color);
-    border-radius: 12px;
+    border-left: 4px solid var(--primary-color);
+    border-radius: 8px;
     margin: 20px 0;
     box-shadow: var(--card-shadow);
     overflow: hidden;
@@ -257,9 +260,8 @@ h3 {
 
 .faq-question {
     background: var(--background-light);
-    padding: 25px 30px 20px 30px;
+    padding: 25px 30px 15px 30px;
     border-bottom: 1px solid var(--border-color);
-    border-left: 4px solid var(--primary-color);
 }
 
 .faq-question h2 {
@@ -271,7 +273,7 @@ h3 {
 }
 
 .faq-answer {
-    padding: 30px;
+    padding: 25px 30px;
     line-height: 1.6;
 }
 
@@ -397,13 +399,13 @@ h3 {
 
 /* FAQ Warnings Box */
 .faq-warnings {
-    background: #fff8e1;
-    border: 2px solid #ffb300;
-    border-left: 6px solid #ff6f00;
-    border-radius: 12px;
+    background: #fffbf0;
+    border: 1px solid #ffe4a3;
+    border-left: 3px solid #ffb300;
+    border-radius: 6px;
     margin: 0 0 20px 0;
-    padding: 25px;
-    box-shadow: var(--card-shadow);
+    padding: 15px 20px;
+    font-size: 0.9em;
 }
 
 .faq-warning {
@@ -411,14 +413,14 @@ h3 {
 }
 
 .faq-warning + .faq-warning {
-    margin-top: 20px;
-    padding-top: 20px;
-    border-top: 1px solid #ffcc02;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid #ffe4a3;
 }
 
 .faq-warning p {
-    margin: 0 0 12px 0;
-    color: var(--secondary-color);
+    margin: 0 0 8px 0;
+    color: var(--text-color);
     line-height: 1.5;
 }
 
@@ -427,8 +429,8 @@ h3 {
 }
 
 .faq-warning strong {
-    color: #c62828;
-    font-size: 1.05em;
+    color: #e65100;
+    font-weight: 600;
 }
 
 .guidance-content {
